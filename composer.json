@@ -18,5 +18,8 @@
         "rector/rector": "^0.12.13",
         "icanhazstring/composer-unused": "^0.7.12",
         "phpunit/phpunit": "^9.5"
+    },
+    "require": {
+        "twig/twig": "^3.0"
     }
 }
