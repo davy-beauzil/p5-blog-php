@@ -1,0 +1,29 @@
+@startuml
+
+!theme plain
+
+Person as "Tout le monde" -> ContactController : GET /contact
+
+
+ContactController -> Renderer : render('contact/index.php')
+Renderer --> Person : affichage de la page de contact
+
+Person -> ContactController : POST /contact
+ContactController -> Validator : validation des données
+Validator --> ContactController : return
+
+alt DataIsNotValid
+    ContactController -> Renderer : render('contact/index.php', ['error' => $error])
+    Renderer --> Person : affichage de la page de contact avec une erreur
+else DataIsValid
+    ContactController -> Database : enregistrement
+    Database --> ContactController : return
+    alt DataIsNotSaved
+    ContactController -> Renderer : render('contact/index.php', ['error' => $error])
+    Renderer --> Person : affichage de la page de contact avec un message d'erreur
+    else DataIsSaved
+    ContactController -> Renderer : render('contact/index.php', ['success' => $success])
+    Renderer --> Person : affichage de la page de contact avec un message de succès
+    end
+end
+@enduml

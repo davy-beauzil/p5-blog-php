@@ -1,0 +1,51 @@
+@startuml
+
+!theme plain
+
+Visiteur -> RegisterController : GET /register
+alt IsLogin
+    RegisterController -> Renderer : render('/account')
+    Renderer --> Visiteur : affichage de son profil
+else IsNotLogin
+    RegisterController -> Renderer : render('/register')
+    Renderer --> Visiteur : affichage du formulaire d'inscription
+end
+
+Visiteur -> RegisterController : POST /register
+
+alt IsLogin
+    RegisterController -> Renderer : render('/account')
+    Renderer --> Visiteur : affichage de son profil
+else IsNotLogin
+    RegisterController -> Validator : validation des données
+    Validator --> RegisterController : return
+    alt IsNotValid
+        RegisterController -> Renderer : render('/register', ['error' => $error])
+        Renderer --> Visiteur : affichage formulaire d'inscription avec message d'erreur
+    else IsValid
+        RegisterController -> Database : vérifier que l'adresse mail n'est pas utilisée
+        Database --> RegisterController : return
+
+        alt MailIsUsed
+            RegisterController -> Renderer : render('/register', ['error' => $error, 'infos' => $infos]
+            Renderer --> Visiteur : affichage formulaire d'inscription avec message d'erreur
+        else MailIsNotUsed
+            RegisterController -> Database : enregistrer le nouveau compte
+            Database --> RegisterController : return
+            alt AccountIsNotCreated
+                RegisterController --> Renderer : render('/register', ['error' => $error, 'infos' => $infos])
+                Renderer --> Visiteur : affichage formulaire d'inscription avec message d'erreur
+            else AccountIsCreated
+                RegisterController -> Session : enregistrement de l'utilisateur en session
+                RegisterController -> Renderer : render('/account', ['success' => $success])
+                Renderer --> Visiteur : affichage formulaire d'inscription avec message de succès
+            end
+        end
+    end
+end
+
+
+
+
+
+@enduml

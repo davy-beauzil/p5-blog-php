@@ -1,0 +1,51 @@
+@startuml
+
+!theme plain
+left to right direction
+
+class article {
+    title : string
+    excerpt : string
+    content : string
+    author : int
+    created_at : datetime
+    updated_at : datetime
+}
+
+class comment {
+    content : string
+    isApproved : bool
+    created_at : datetime
+    updated_at : datetime
+}
+
+class user {
+   firstname : string
+   lastname : string
+   mail : string
+   password : string
+   created_at : datetime
+   updated_at : datetime
+}
+
+class permission {
+   label : string
+   created_at : datetime
+   updated_at : datetime
+}
+
+class contact {
+    firstname : string
+    lastname : string
+    mail : string
+    message : string
+    created_at : datetime
+    updated_at : datetime
+}
+
+permission "*" -- "*" user
+article "*" -- "1" user
+comment "*" -- "1" user
+article "1" -- "*" comment
+
+@enduml

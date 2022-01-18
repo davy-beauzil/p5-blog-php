@@ -1,0 +1,45 @@
+@startuml
+
+!theme plain
+
+Person as "Utilisateur, Auteur ou Admin" -> AccountController : GET /account/{id}/update
+
+alt IsNotLogin
+AccountController -> Renderer : redirect('/login')
+else IsLogin
+    alt IsBadPerson
+        AccountController -> Renderer : redirect('error/401')
+    else IsGoodPerson
+        AccountController -> Database : récupération informations compte
+        Database --> AccountController : return
+        AccountController -> Renderer : render('account/update', ['account' => $account])
+        Renderer --> Person : affichage du formulaire
+
+        Person -> AccountController : PUT /account/{id}/update
+        alt IsNotLogin
+        AccountController -> Renderer : redirect('/login')
+        else IsLogin
+            alt IsBadPerson
+                AccountController -> Renderer : redirect('error/401')
+            else IsGoodPerson
+                AccountController -> Validator : validation des données
+                Validator --> AccountController : return
+                alt IsNotValid
+                    AccountController -> Renderer : render('account/update', ['account' => $account, 'error' => $error])
+                    Renderer --> Person : affichage du formulaire avec une erreur
+                else IsValid
+                    AccountController -> Database : modification du compte
+                    Database --> AccountController : return
+                    alt AccountIsNotUpdated
+                        AccountController -> Renderer : render('/account/{id}', ['error' => $error])
+                        Renderer --> Person : affichage du compte avec un message d'erreur
+                    else AccountIsUpdated
+                        AccountController -> Renderer : render('/account/{id}', ['success' => $success])
+                        Renderer --> Person : affichage du compte avec un message de succès
+                    end
+                end
+            end
+        end
+    end
+end
+@enduml

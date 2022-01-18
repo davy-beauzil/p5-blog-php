@@ -1,0 +1,21 @@
+@startuml
+
+!theme plain
+left to right direction
+
+:Visiteur:
+
+package compte {
+Visiteur --> (Se connecter)
+Visiteur --> (S'inscrire)
+}
+
+package article {
+(Consulter les articles) <--- Visiteur
+(Consulter un article) <--- Visiteur
+}
+
+package contact {
+Visiteur --> (faire une demande de contact)
+}
+@enduml

@@ -1,0 +1,36 @@
+@startuml
+
+!theme plain
+left to right direction
+
+:Author:
+
+package article {
+Author ---> (Créer un article)
+Author ---> (Modifier un article)
+Author ---> (Supprimer un article)
+Author ---> (Consulter les articles)
+Author ---> (Consulter un article)
+}
+
+package commentaires {
+(Commenter un article) <--- Author
+(Modifier ses commentaires) <--- Author
+(Supprimer ses commentaire) <--- Author
+(Valider un commentaire) <--- Author
+(Refuser un commentaire) <--- Author
+}
+
+package compte {
+(Modifier son mot de passe) <--- Author
+(Modifier ses informations personnelles) <--- Author
+(Se déconnecter) <--- Author
+}
+
+package contact {
+Author ---> (faire une demande de contact)
+Author ---> (lire les demandes de contact)
+Author ---> (lire une demande de contact)
+}
+
+@enduml

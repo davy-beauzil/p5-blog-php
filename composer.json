@@ -1,0 +1,22 @@
+{
+    "name": "davy/p5-blog-php",
+    "authors": [
+        {
+            "name": "Davy Beauzil",
+            "email": "davy.beauzil72@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "App\\Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.4",
+        "symplify/easy-coding-standard": "^10.0",
+        "rector/rector": "^0.12.13",
+        "icanhazstring/composer-unused": "^0.7.12",
+        "phpunit/phpunit": "^9.5"
+    }
+}

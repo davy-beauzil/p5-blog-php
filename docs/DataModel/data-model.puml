@@ -1,0 +1,66 @@
+@startuml
+
+!theme plain
+left to right direction
+
+class article {
+    id: int
+    title : string
+    excerpt : string
+    content : string
+    user_id : int
+    created_at : datetime
+    updated_at : datetime
+}
+
+class comment {
+    id : int
+    content : string
+    isApproved : bool
+    article_id : int
+    user_id : int
+    created_at : datetime
+    updated_at : datetime
+}
+
+class user {
+    id : int
+    firstname : string
+    lastname : string
+    email : string
+    password : string
+    isAuthor : bool
+    isAdmin : bool
+    created_at : datetime
+    updated_at : datetime
+}
+
+class permission {
+    id: int
+    label : string
+    created_at : datetime
+    updated_at : datetime
+}
+
+class user_permission {
+    user_id : int
+    user_permission : int
+}
+
+class message {
+    id : int
+    firstname : string
+    lastname : string
+    mail : string
+    message : string
+    created_at : datetime
+    updated_at : datetime
+}
+
+article "*" -- "1" user : écrire
+comment "*" -- "1" user : publier
+permission "1" -- "*" user_permission : est possédée
+user "1" -- "*" user_permission : possède
+article "1" -- "*" comment : appartenir
+
+@enduml

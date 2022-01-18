@@ -1,0 +1,30 @@
+@startuml
+
+!theme plain
+
+Person as "Author ou Admin" -> ArticleController : GET /dashboard/article/{id}
+
+alt IsNotAuthorize
+ArticleController -> Renderer : redirect('errors/401.php')
+Renderer --> Person : affichage de la page d'erreur
+else IsAuthorize
+ArticleController -> Renderer : render('dashboard/article/update.php')
+UpdateArticleView --> ArticleController : return
+ArticleController --> Person : affichage du formulaire pré-rempli
+
+Person -> ArticleController : POST /article/{id}/update
+    alt IsNotAuthorize
+    ArticleController -> ErrorView : récupération de la page d'erreur
+    ErrorView --> ArticleController : return
+    ArticleController --> Person : affichage de la page d'erreur (401)
+    else IsAuthorize
+    ArticleController -> Database : modification de l'article
+    Database --> ArticleController : return
+        alt IsNotUpdated
+        ArticleController -> ArticleController : redirection vers /article/{id} (l'article en question) avec un message d'erreur
+        else IsUpdated
+        ArticleController -> ArticleController : redirection vers /article/{id} (l'article en question) avec un message de succès
+        end
+    end
+end
+@enduml

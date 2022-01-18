@@ -1,0 +1,21 @@
+@startuml
+
+!theme plain
+
+Person as "Auteur ou Admin" -> CommentController : PUT /dashboard/comment/{comment_id}/validate
+
+alt IsBadPerson
+CommentController -> Renderer : redirect('errors/401')
+Renderer --> Person : affichage de la page d'erreur
+else IsGoodPerson
+CommentController -> Database : valider le commentaire
+Database --> CommentController : return
+    alt IsNotValidated
+    CommentController -> Renderer : render('/dashboard/comments', ['error' => $error]})
+    Renderer --> Person : affichage de l'ensemble des commentaires avec un message d'erreur
+    else IsValidated
+    CommentController -> Renderer : render('/dashboard/comments', ['success' => $success]})
+    Renderer --> Person : affichage de l'ensemble des commentaires avec un message de succès
+    end
+end
+@enduml
