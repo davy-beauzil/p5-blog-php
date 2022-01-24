@@ -23,7 +23,7 @@ class comment {
     updated_at : datetime
 }
 
-class user {
+class users {
     id : int
     firstname : string
     lastname : string
@@ -35,32 +35,20 @@ class user {
     updated_at : datetime
 }
 
-class permission {
-    id: int
-    label : string
-    created_at : datetime
-    updated_at : datetime
-}
-
-class user_permission {
-    user_id : int
-    user_permission : int
-}
-
-class message {
+class contact {
     id : int
     firstname : string
     lastname : string
     mail : string
     message : string
+    user_id : int
     created_at : datetime
     updated_at : datetime
 }
 
-article "*" -- "1" user : écrire
-comment "*" -- "1" user : publier
-permission "1" -- "*" user_permission : est possédée
-user "1" -- "*" user_permission : possède
+contact "*" -- "0..1" users : envoyer
+article "*" -- "1" users : écrire
+comment "*" -- "1" users : publier
 article "1" -- "*" comment : appartenir
 
 @enduml
