@@ -20,6 +20,7 @@
         "phpunit/phpunit": "^9.5"
     },
     "require": {
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "symfony/dotenv": "^6.0"
     }
 }
