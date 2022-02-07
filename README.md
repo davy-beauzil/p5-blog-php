@@ -13,16 +13,16 @@ Pour faire court, il m'était demandé de réalisé :
 -   un formulaire de contact
 -   un système de blog
 -   un système de comptes utilisateur qui peuvent avoir plusieurs rôles :
-  -   **VISITEUR** (non connecté), il peut :
+-   **VISITEUR** (non connecté), il peut :
   
     <img alt="Visitor Usecase" src="docs\Images\Usecases\usecase-visitor.png"/>
-  -   **UTILISATEUR**, il peut
+-   **UTILISATEUR**, il peut
   
     <img alt="Visitor Usecase" src="docs\Images\Usecases\usecase-user.png"/>
-  -   **AUTEUR**, il peut :
+-   **AUTEUR**, il peut :
   
     <img alt="Visitor Usecase" src="docs\Images\Usecases\usecase-author.png"/>
-  -   **ADMINISTRATEUR**, il peut :
+-   **ADMINISTRATEUR**, il peut :
   
     <img alt="Visitor Usecase" src="docs\Images\Usecases\usecase-admin.png"/>
 
@@ -46,4 +46,4 @@ Un certain nombre de livrables m'a été demandé pour valider ce projet :
 -   instruction pour installer le projet dans le fichier REAMDE.md
 -   schémas UML dans une dossier nommé "diagrammes" à la racine du projet
 -   Les issues que j'ai créé
-  -   Un lien vers la dernière analyse SymfonyInsight / Codacy
+-   Un lien vers la dernière analyse SymfonyInsight / Codacy
