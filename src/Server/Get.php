@@ -5,7 +5,7 @@ namespace App\Server;
 class Get
 {
     /**
-     * Affect asked value to asked SuperGlobal $_SESSION
+     * Affect asked value to asked SuperGlobal $_GET
      */
     public static function put(string $key, mixed $value): void
     {
@@ -13,7 +13,7 @@ class Get
     }
 
     /**
-     * Return asked SuperGlobal $_SESSION value
+     * Return asked SuperGlobal $_GET value
      */
     public static function get(string $key): mixed
     {
@@ -21,7 +21,7 @@ class Get
     }
 
     /**
-     * Unset asked SuperGlobal $_SESSION
+     * Unset asked SuperGlobal $_GET
      */
     public static function forget(string $key): void
     {
