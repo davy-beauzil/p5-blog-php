@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Router\Router;
 use Exception;
-use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class AbstractController
 {
-
     /**
      * @param array<string, mixed> $parameters
      */
@@ -17,7 +18,7 @@ class AbstractController
     {
         try {
             $this->renderView($view, $parameters);
-        }catch(Exception $e){
+        } catch (Exception) {
             $errorController = new ErrorController();
             $errorController->pageNotFound();
         }
@@ -29,7 +30,7 @@ class AbstractController
     public function renderView(string $view, array $parameters = []): void
     {
         $loader = new FilesystemLoader(__DIR__ . '/../View');
-        if(!$loader->exists($view . '.html.twig')){
+        if (! $loader->exists($view . '.html.twig')) {
             throw new Exception('Une erreur s’est produite lors du rendu.');
         }
         $twig = new Environment($loader, []);
@@ -50,6 +51,4 @@ class AbstractController
         $router = new Router();
         $this->redirect($router->generateUrl($route_name, $parameters), $status_code);
     }
-
-
 }
