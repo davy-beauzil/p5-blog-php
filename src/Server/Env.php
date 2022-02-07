@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace App\Server;
 
-class Get
+class Env
 {
     /**
-     * Affect asked value to asked SuperGlobal $_GET.
+     * Affect asked value to asked SuperGlobal $_ENV.
      */
     public static function put(string $key, mixed $value): void
     {
-        $_GET[$key] = $value;
+        $_ENV[$key] = $value;
     }
 
     /**
-     * Return asked SuperGlobal $_GET value.
+     * Return asked SuperGlobal $_ENV value.
      */
     public static function get(string $key): mixed
     {
-        return $_GET[$key] ?? null;
+        return $_ENV[$key] ?? null;
     }
 
     /**
-     * Unset asked SuperGlobal $_GET.
+     * Unset asked SuperGlobal $_ENV.
      */
     public static function forget(string $key): void
     {
-        unset($_GET[$key]);
+        unset($_ENV[$key]);
     }
 
     /**
@@ -35,6 +35,6 @@ class Get
      */
     public static function getGlobalSession(): array
     {
-        return $_GET;
+        return $_ENV;
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Server;
 
 class Session
 {
     /**
-     * Affect asked value to asked SuperGlobal $_SESSION
+     * Affect asked value to asked SuperGlobal $_SESSION.
      */
     public static function put(string $key, mixed $value): void
     {
@@ -13,15 +15,15 @@ class Session
     }
 
     /**
-     * Return asked SuperGlobal $_SESSION value
+     * Return asked SuperGlobal $_SESSION value.
      */
     public static function get(string $key): mixed
     {
-        return ($_SESSION[$key] ?? null);
+        return $_SESSION[$key] ?? null;
     }
 
     /**
-     * Unset asked SuperGlobal $_SESSION
+     * Unset asked SuperGlobal $_SESSION.
      */
     public static function forget(string $key): void
     {
