@@ -1,27 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Router\Router;
-use Twig\Loader\FilesystemLoader;
+use Exception;
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class AbstractController
 {
-
     /**
      * @param array<string, mixed> $parameters
      */
     public function render(string $view, array $parameters = []): void
     {
+        try {
+            $this->renderView($view, $parameters);
+        } catch (Exception) {
+            $errorController = new ErrorController();
+            $errorController->pageNotFound();
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $parameters
+     */
+    public function renderView(string $view, array $parameters = []): void
+    {
         $loader = new FilesystemLoader(__DIR__ . '/../View');
-        if(!$loader->exists($view . '.html.twig')){
-            dd('Le template est introuvable, il faut être redirigé vers une page 404');
-            return;
+        if (! $loader->exists($view . '.html.twig')) {
+            throw new Exception('Une erreur s’est produite lors du rendu de la page');
         }
         $twig = new Environment($loader, []);
         $template = $twig->load($view . '.html.twig');
-        echo $template->render($parameters);
+        $template->display($parameters);
     }
 
     public function redirect(string $url, int $status_code = 302): void
@@ -37,6 +51,4 @@ class AbstractController
         $router = new Router();
         $this->redirect($router->generateUrl($route_name, $parameters), $status_code);
     }
-
-
 }

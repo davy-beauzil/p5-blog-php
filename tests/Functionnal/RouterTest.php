@@ -1,16 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Functionnal;
 
 use PHPUnit\Framework\TestCase;
 
-class RouterTest extends TestCase
+/**
+ * @internal
+ */
+final class RouterTest extends TestCase
 {
     /**
      * @test
      */
     public function test()
     {
-        self::assertEquals(1, 1);
+        static::assertSame(1, 1);
     }
 }
