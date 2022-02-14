@@ -6,6 +6,10 @@ use App\Router\Router;
 use App\Server\Server;
 use Symfony\Component\Dotenv\Dotenv;
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . '/../.env.local');
 

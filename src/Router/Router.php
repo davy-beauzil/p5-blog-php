@@ -6,7 +6,10 @@ namespace App\Router;
 
 use App\Controller\ErrorController;
 use App\Server\Env;
+use App\Server\Get;
+use App\Server\Post;
 use function array_key_exists;
+use function count;
 use Exception;
 use function in_array;
 use function is_string;
@@ -21,14 +24,38 @@ class Router
     public function extractParameters(): void
     {
         if ($this->route !== null) {
+            if (! empty($_GET)) {
+                $this->route->getParameters()
+                    ->addParameters(Parameters::GET, Get::getGlobalSession())
+                ;
+            }
+
             if (in_array($this->route->getMethod(), ['PUT', 'PATCH', 'DELETE'], true)) {
                 if (file_get_contents('php://input')) {
                     /** @var array<string, mixed> $parameters */
                     $parameters = json_decode(file_get_contents('php://input'), true);
-                    $this->route->addParameters($parameters);
+
+                    switch ($this->route->getMethod()) {
+                        case 'PUT':
+                            $this->route->getParameters()
+                                ->addParameters(Parameters::PUT, $parameters)
+                            ;
+                                // no break
+                        case 'PATCH':
+                            $this->route->getParameters()
+                                ->addParameters(Parameters::PATCH, $parameters)
+                            ;
+                                // no break
+                        case 'DELETE':
+                            $this->route->getParameters()
+                                ->addParameters(Parameters::DELETE, $parameters)
+                            ;
+                    }
                 }
             } elseif ($this->route->getMethod() === 'POST') {
-                $this->route->addParameters($_POST);
+                $this->route->getParameters()
+                    ->addParameters(Parameters::POST, Post::getGlobalSession())
+                ;
             }
         }
     }
@@ -65,7 +92,11 @@ class Router
                 continue;
             }
             $this->route = $route;
-            $this->route->addParameters($queryParameters);
+            if (count($queryParameters) > 0) {
+                $this->route->getParameters()
+                    ->addParameters(Parameters::GET, $queryParameters)
+                ;
+            }
             $this->extractParameters();
             break;
         }
@@ -77,6 +108,9 @@ class Router
     public function routing(string $path, string $method): void
     {
         $errorController = new ErrorController();
+        if (str_contains($path, '?')) {
+            $path = mb_substr($path, 0, (int) mb_strpos($path, '?'));
+        }
         $this->matchRouteAndGetParameters($path, $method);
 
         if ($this->route === null) {
@@ -88,7 +122,6 @@ class Router
 
         // Check if controller exists
         if (! file_exists($controller_path)) {
-            $errorController->pageNotFound();
             exit();
         }
         require_once $controller_path;
@@ -96,7 +129,6 @@ class Router
 
         // Check if method exists
         if (! method_exists($controller, $this->route->getControllerMethod())) {
-            $errorController->pageNotFound();
             exit();
         }
         $controller->{$this->route->getControllerMethod()}($this->route->getParameters());
@@ -152,6 +184,8 @@ class Router
         return match ($method) {
             'GET' => [
                 new Route('/', 'GET', 'homepage', 'HomepageController', 'index'),
+                new Route('/login', 'GET', 'login', 'LoginController', 'login'),
+                new Route('/register', 'GET', 'register', 'LoginController', 'register'),
                 new Route('/test', 'GET', 'test', 'HomepageController', 'test'),
                 new Route('/article/{id}', 'GET', 'article', 'HomepageController', 'article'),
                 new Route(
@@ -162,7 +196,10 @@ class Router
                     'article'
                 ),
             ],
-            'POST' => [new Route('/login', 'POST', 'login', 'LoginController', 'login')],
+            'POST' => [
+                new Route('/login', 'POST', 'login', 'LoginController', 'login'),
+                new Route('/register', 'POST', 'register', 'LoginController', 'register'),
+            ],
             'PUT' => [new Route('/article/{id}', 'PUT', 'article', 'HomepageController', 'article')],
             default => [],
         };

@@ -6,17 +6,16 @@ namespace App\Router;
 
 class Route
 {
-    /**
-     * @param array<string, mixed>|null $parameters
-     */
+    private Parameters $parameters;
+
     public function __construct(
-        private string $path = '',
-        private string $method = 'GET',
-        private string $name = '',
-        private string $controller_name = '',
-        private string $controller_method = '',
-        private ?array $parameters = null,
+        private string $path,
+        private string $method,
+        private string $name,
+        private string $controller_name,
+        private string $controller_method,
     ) {
+        $this->parameters = new Parameters();
     }
 
     public function getPath(): string
@@ -69,19 +68,8 @@ class Route
         $this->controller_method = $controller_method;
     }
 
-    /**
-     * @return array<string, mixed>|null
-     */
-    public function getParameters(): ?array
+    public function getParameters(): Parameters
     {
         return $this->parameters;
-    }
-
-    /**
-     * @param array<string, mixed> $parameters
-     */
-    public function addParameters(array $parameters): void
-    {
-        $this->parameters = array_merge($this->parameters ?? [], $parameters);
     }
 }

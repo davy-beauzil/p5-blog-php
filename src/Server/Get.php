@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Server;
 
+use const INPUT_GET;
+
 class Get
 {
     /**
@@ -19,7 +21,7 @@ class Get
      */
     public static function get(string $key): mixed
     {
-        return $_GET[$key] ?? null;
+        return filter_input(INPUT_GET, $key);
     }
 
     /**

@@ -1,0 +1,27 @@
+<h1>On est bien sur Register</h1>
+{% if errors.global %}
+Global : {{ errors.global }}
+{% endif %}
+
+{% if errors.first_name %}
+{{ errors.first_name }} <br>
+{% endif %}
+
+{% if errors.last_name %}
+{{ errors.last_name }}<br>
+{% endif %}
+
+{% if errors.email %}
+{{ errors.email }}<br>
+{% endif %}
+
+{% if errors.password %}
+{{ errors.password }}<br>
+{% endif %}
+<form action="/register" method="POST">
+    <input id="first_name" name="first_name" type="text" placeholder="Prénom">
+    <input id="last_name" name="last_name" type="text" placeholder="Nom">
+    <input id="email" name="email" type="email" placeholder="Adresse mail">
+    <input id="password" name="password" type="password" placeholder="Mot de passe">
+    <input type="submit" value="Créer mon compte">
+</form>

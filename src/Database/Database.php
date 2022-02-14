@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Database;
 
 use App\Server\Env;
-use Exception;
 use function is_string;
 use PDO;
+use PDOException;
 
 class Database
 {
-    public ?PDO $pdo = null;
+    public static ?PDO $pdo = null;
 
-    public function getPDO(): PDO
+    public static function getPDO(): PDO
     {
         $env = new Env();
         $db_name = $env->get('DATABASE_NAME');
@@ -24,17 +24,26 @@ class Database
             die('Les informations de connexion à la base de données ne sont pas au bon format');
         }
 
-        if ($this->pdo === null) {
+        $options = [
+            PDO::ATTR_EMULATE_PREPARES => false,
+            // désactive le mode d'émulation pour les "vraies" instructions préparées
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            // active les erreurs sous forme d'exceptions
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            // faire de la récupération par défaut un tableau associatif
+        ];
+
+        if (self::$pdo === null) {
             try {
-                $this->pdo = new PDO(sprintf(
+                self::$pdo = new PDO(sprintf(
                     'mysql:host=localhost;dbname=%s;charset=utf8',
                     $db_name
-                ), $user, $password);
-            } catch (Exception $e) {
-                die('Erreur : ' . $e->getMessage());
+                ), $user, $password, $options);
+            } catch (PDOException $e) {
+                die('Erreur lors de la connexion à la base de données : ' . $e->getMessage());
             }
         }
 
-        return $this->pdo;
+        return self::$pdo;
     }
 }
