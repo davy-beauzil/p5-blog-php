@@ -35,7 +35,6 @@ class RegisterService
             $parameters->post['email'],
             $parameters->post['password'],
         );
-
         $isValid = RegisterValidator::validate($register);
 
         if ($isValid === true) {

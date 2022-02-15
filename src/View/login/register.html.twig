@@ -1,27 +1,54 @@
-<h1>On est bien sur Register</h1>
-{% if errors.global %}
-Global : {{ errors.global }}
-{% endif %}
+{% extends "base.html.twig" %}
 
-{% if errors.first_name %}
-{{ errors.first_name }} <br>
-{% endif %}
+{% block title %}Inscription{% endblock %}
 
-{% if errors.last_name %}
-{{ errors.last_name }}<br>
-{% endif %}
-
-{% if errors.email %}
-{{ errors.email }}<br>
-{% endif %}
-
-{% if errors.password %}
-{{ errors.password }}<br>
-{% endif %}
-<form action="/register" method="POST">
-    <input id="first_name" name="first_name" type="text" placeholder="Prénom">
-    <input id="last_name" name="last_name" type="text" placeholder="Nom">
-    <input id="email" name="email" type="email" placeholder="Adresse mail">
-    <input id="password" name="password" type="password" placeholder="Mot de passe">
-    <input type="submit" value="Créer mon compte">
-</form>
+{% block body %}
+    <div class="container">
+        <div class="row">
+            {% if errors.global %}
+            <div class="alert alert-danger" role="alert">
+                {{ errors.global }}
+            </div>
+            {% endif %}
+            <form action="/register" method="post">
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">Prénom</label>
+                    <input type="text" class="form-control {% if errors.first_name %}is-invalid{% endif %}" id="first_name" name="first_name" aria-describedby="first_name_error" required>
+                    {% if errors.first_name %}
+                    <div id="first_name_error" class="invalid-feedback">
+                        {{ errors.first_name }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Nom</label>
+                    <input type="text" class="form-control {% if errors.last_name %}is-invalid{% endif %}" id="last_name" name="last_name" aria-describedby="last_name_error" required>
+                    {% if errors.last_name %}
+                    <div id="last_name_error" class="invalid-feedback">
+                        {{ errors.last_name }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Adresse email</label>
+                    <input type="email" class="form-control {% if errors.email %}is-invalid{% endif %}" id="email" name="email" aria-describedby="email_error" required>
+                    {% if errors.email %}
+                    <div id="email_error" class="invalid-feedback">
+                        {{ errors.email }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control {% if errors.password %}is-invalid{% endif %}" id="password" name="password" aria-describedby="password_error" required>
+                    {% if errors.password %}
+                    <div id="password_error" class="invalid-feedback">
+                        {{ errors.password }}
+                    </div>
+                    {% endif %}
+                </div>
+                <input type="submit" class="btn btn-primary" value="S'inscrire">
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -114,7 +114,7 @@ class Router
         $this->matchRouteAndGetParameters($path, $method);
 
         if ($this->route === null) {
-            $errorController->pageNotFound();
+            $errorController->pageNotFound('Aucune route n’a été trouvée');
             exit();
         }
 
@@ -122,6 +122,7 @@ class Router
 
         // Check if controller exists
         if (! file_exists($controller_path)) {
+            $errorController->pageNotFound('Le controlleur demandé n’existe pas');
             exit();
         }
         require_once $controller_path;
@@ -129,6 +130,9 @@ class Router
 
         // Check if method exists
         if (! method_exists($controller, $this->route->getControllerMethod())) {
+            $errorController->pageNotFound(
+                sprintf('La méthode "%s" du controlleur "%s" n’existe pas', $this->route->getControllerMethod(), $this->route->getControllerName())
+            );
             exit();
         }
         $controller->{$this->route->getControllerMethod()}($this->route->getParameters());
