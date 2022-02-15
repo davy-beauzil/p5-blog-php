@@ -19,14 +19,14 @@ class Router
     public ?Route $route = null;
 
     /**
-     * Extract parameters for POST, PUT, PATCH and DELETE methods.
+     * Extract parameters for GET, POST, PUT, PATCH and DELETE methods.
      */
     public function extractParameters(): void
     {
         if ($this->route !== null) {
             if (! empty($_GET)) {
                 $this->route->getParameters()
-                    ->addParameters(Parameters::GET, Get::getGlobalSession())
+                    ->add(Parameters::GET, Get::getGlobalSession())
                 ;
             }
 
@@ -34,27 +34,26 @@ class Router
                 if (file_get_contents('php://input')) {
                     /** @var array<string, mixed> $parameters */
                     $parameters = json_decode(file_get_contents('php://input'), true);
-
                     switch ($this->route->getMethod()) {
                         case 'PUT':
                             $this->route->getParameters()
-                                ->addParameters(Parameters::PUT, $parameters)
+                                ->add(Parameters::PUT, $parameters)
                             ;
                                 // no break
                         case 'PATCH':
                             $this->route->getParameters()
-                                ->addParameters(Parameters::PATCH, $parameters)
+                                ->add(Parameters::PATCH, $parameters)
                             ;
                                 // no break
                         case 'DELETE':
                             $this->route->getParameters()
-                                ->addParameters(Parameters::DELETE, $parameters)
+                                ->add(Parameters::DELETE, $parameters)
                             ;
                     }
                 }
             } elseif ($this->route->getMethod() === 'POST') {
                 $this->route->getParameters()
-                    ->addParameters(Parameters::POST, Post::getGlobalSession())
+                    ->add(Parameters::POST, Post::getGlobalSession())
                 ;
             }
         }
@@ -94,7 +93,7 @@ class Router
             $this->route = $route;
             if (count($queryParameters) > 0) {
                 $this->route->getParameters()
-                    ->addParameters(Parameters::GET, $queryParameters)
+                    ->add(Parameters::GET, $queryParameters)
                 ;
             }
             $this->extractParameters();

@@ -27,11 +27,11 @@ class LoginController extends AbstractController
     {
         $result = false;
 
-        if ($parameters->hasParameters(Parameters::POST, 'first_name', 'last_name', 'email', 'password')) {
+        if ($parameters->has(Parameters::POST, 'first_name', 'last_name', 'email', 'password')) {
             $result = RegisterService::register($parameters);
 
             if (! is_array($result)) {
-                $this->redirectToRoute('login', []);
+                $this->redirectToRoute('login');
             }
         }
 

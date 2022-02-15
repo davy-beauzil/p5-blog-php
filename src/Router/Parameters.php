@@ -17,8 +17,7 @@ class Parameters
 
     public const PATCH = 'patch';
 
-    public const DELETE = 'delete
-    ';
+    public const DELETE = 'delete';
 
     /**
      * @var array<string, mixed>
@@ -48,24 +47,21 @@ class Parameters
     /**
      * @param array<string, mixed> $parameters
      */
-    public function addParameters(string $method, array $parameters): void
+    public function add(string $method, array $parameters): void
     {
         if (is_array($this->{$method})) {
             $this->{$method} = array_merge($this->{$method}, $parameters);
         }
     }
 
-    public function hasParameters(string $method, string ...$keys): bool
+    public function has(string $method, string ...$keys): bool
     {
         if (is_array($this->{$method})) {
             foreach ($keys as $key) {
                 if (! array_key_exists($key, $this->{$method})) {
-//                    dump('La clé ' . $key . ' n’existe pas');
-//                    dd($this->{$method});
                     return false;
                 }
             }
-
             return true;
         }
 
