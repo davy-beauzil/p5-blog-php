@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Validator;
 
-use App\Dto\Register;
+use App\Model\User;
 
 class RegisterValidator extends Validator
 {
     /**
      * @return true|array<string, string>
      */
-    public static function validate(Register $register): bool|array
+    public static function validate(User $register): bool|array
     {
         $errors = [];
         if (! self::biggerThan(3, $register->first_name) || ! self::onlyAlphabet($register->first_name)) {

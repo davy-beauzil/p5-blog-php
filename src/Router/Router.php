@@ -130,7 +130,11 @@ class Router
         // Check if method exists
         if (! method_exists($controller, $this->route->getControllerMethod())) {
             $errorController->pageNotFound(
-                sprintf('La méthode "%s" du controlleur "%s" n’existe pas', $this->route->getControllerMethod(), $this->route->getControllerName())
+                sprintf(
+                    'La méthode "%s" du controlleur "%s" n’existe pas',
+                    $this->route->getControllerMethod(),
+                    $this->route->getControllerName()
+                )
             );
             exit();
         }

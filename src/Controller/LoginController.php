@@ -5,22 +5,39 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Router\Parameters;
-use App\Server\Post;
+use App\ServiceProviders\CsrfServiceProvider;
+use App\Services\LoginService;
 use App\Services\RegisterService;
 use function is_array;
+use function is_string;
 
 class LoginController extends AbstractController
 {
     public function login(Parameters $parameters): void
     {
-//        if(!Post::has('email', 'password')){
-//            var_dump('Un ou plusieurs champs sont manquants');
-//        }
-//        $mail = Post::get('email');
-//        $password = Post::get('password');
-//        var_dump($mail, $password);
-        ////        $this->service->login($mail, $password);
-        $this->render('login/login');
+        $result = false;
+        $post = $parameters->post;
+
+        if (
+            $parameters->has(Parameters::POST, 'email', 'password', '_csrf') &&
+            is_string($post['_csrf']) &&
+            CsrfServiceProvider::validate('login', $post['_csrf'])
+        ) {
+            $result = LoginService::login($parameters);
+
+            if ($result === true) {
+                $this->redirectToRoute('homepage');
+            }
+
+            $filler['email'] = $post['email'];
+            $filler['password'] = $post['password'];
+        }
+
+        $this->render('login/login', [
+            'errors' => is_array($result) ? $result : null,
+            'filler' => $filler ?? null,
+            'csrf' => CsrfServiceProvider::generate('login'),
+        ]);
     }
 
     public function register(Parameters $parameters): void

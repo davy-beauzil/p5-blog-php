@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            {% if errors.global %}
+                <div class="alert alert-danger" role="alert">
+                    {{ errors.global }}
+                </div>
+            {% endif %}
+            <form action="/login" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Adresse email</label>
+                    <input type="email" class="form-control {% if errors.email %}is-invalid{% endif %}" id="email" name="email" {% if filler.email %} value="{{ filler.email }}" {% endif %} required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control {% if errors.password %}is-invalid{% endif %}" id="password" name="password" {% if filler.password %} value="{{ filler.password }}" {% endif %} required>
+                </div>
+                <input type="hidden" name="_csrf" value="{{ csrf }}">
+                <input type="submit" class="btn btn-primary" value="Se connecter">
+            </form>
+        </div>
+    </div>
+{% endblock %}

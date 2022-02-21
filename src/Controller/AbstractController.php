@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Router\Router;
+use App\Server\Session;
 use Exception;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -29,13 +30,20 @@ class AbstractController
      */
     public function renderView(string $view, array $parameters = []): void
     {
-        $loader = new FilesystemLoader(__DIR__ . '/../View');
+        $loader = new FilesystemLoader(__DIR__ . '/../../templates');
         if (! $loader->exists($view . '.html.twig')) {
             throw new Exception(sprintf(
                 'Une erreur s’est produite lors du rendu avec le fichier %s.html.twig',
                 $view
             ));
         }
+
+        // on récupère l'utilisateur courant pour le rendre accessible globalement depuis twig
+        $user = Session::get('user');
+        if ($user !== null) {
+            $parameters['user'] = $user;
+        }
+
         $twig = new Environment($loader, []);
         $template = $twig->load($view . '.html.twig');
         $template->display($parameters);

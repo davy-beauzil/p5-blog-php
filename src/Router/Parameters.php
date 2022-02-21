@@ -62,6 +62,7 @@ class Parameters
                     return false;
                 }
             }
+
             return true;
         }
 

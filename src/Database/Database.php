@@ -25,12 +25,12 @@ class Database
         }
 
         $options = [
-            PDO::ATTR_EMULATE_PREPARES => false,
             // désactive le mode d'émulation pour les "vraies" instructions préparées
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_EMULATE_PREPARES => false,
             // active les erreurs sous forme d'exceptions
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             // faire de la récupération par défaut un tableau associatif
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ];
 
         if (self::$pdo === null) {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Dto\Register;
 use App\Exception\RegisterException;
+use App\Model\User;
 use App\Repository\UserRepository;
 use App\Router\Parameters;
 use App\Validator\RegisterValidator;
@@ -29,12 +29,14 @@ class RegisterService
             ];
         }
 
-        $register = new Register(
+        $user = new User();
+        $register = $user->registerUser(
             $parameters->post['first_name'],
             $parameters->post['last_name'],
             $parameters->post['email'],
-            $parameters->post['password'],
+            $parameters->post['password']
         );
+
         $isValid = RegisterValidator::validate($register);
 
         if ($isValid === true) {
