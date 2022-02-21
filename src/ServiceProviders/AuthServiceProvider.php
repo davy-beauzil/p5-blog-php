@@ -15,7 +15,8 @@ class AuthServiceProvider
     {
         if (self::isAuthenticated()) {
             /** @var array<string, mixed> $user */
-            return Session::get('user');
+            $user = Session::get('user');
+            return $user;
         }
 
         return null;

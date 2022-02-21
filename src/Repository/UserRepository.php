@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Dto\Login;
+use App\Dto\Register;
 use App\Exception\LoginException;
 use App\Exception\RegisterException;
-use App\Model\User;
 use function count;
 use function is_string;
 use PDOException;
 
 class UserRepository extends AbstractRepository
 {
-    public static function create(User $register): void
+    public static function create(Register $register): void
     {
         if (self::userExists($register->email)) {
             throw new RegisterException('Vous avez déjà un compte. Essayez de vous connecter.');

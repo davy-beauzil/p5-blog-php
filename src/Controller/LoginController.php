@@ -22,16 +22,14 @@ class LoginController extends AbstractController
         if (
             $parameters->has(Parameters::POST, 'email', 'password', '_csrf') &&
             is_string($post['_csrf']) &&
-            CsrfServiceProvider::validate('login', $post['_csrf'])
+            $this->checkCSRF('login', $post['_csrf'])
         ) {
             $result = LoginService::login($parameters);
-
             if ($result === true) {
                 $this->redirectToRoute('homepage');
             }
 
             $filler['email'] = $post['email'];
-            $filler['password'] = $post['password'];
         }
 
         $this->render('login/login', [
@@ -45,7 +43,14 @@ class LoginController extends AbstractController
     {
         $result = false;
 
-        if ($parameters->has(Parameters::POST, 'first_name', 'last_name', 'email', 'password')) {
+        if ($parameters->has(
+            Parameters::POST,
+            'first_name',
+            'last_name',
+            'email',
+            'password',
+            'password_confirmation'
+        )) {
             $result = RegisterService::register($parameters);
 
             if (! is_array($result)) {

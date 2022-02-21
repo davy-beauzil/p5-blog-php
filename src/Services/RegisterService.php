@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Dto\Register;
 use App\Exception\RegisterException;
-use App\Model\User;
 use App\Repository\UserRepository;
 use App\Router\Parameters;
 use App\Validator\RegisterValidator;
@@ -19,23 +19,13 @@ class RegisterService
      */
     public static function register(Parameters $parameters): bool|array
     {
-        if (! is_string($parameters->post['first_name']) ||
-            ! is_string($parameters->post['last_name']) ||
-            ! is_string($parameters->post['email']) ||
-            ! is_string($parameters->post['password'])
-        ) {
+        try {
+            $register = self::createRegister($parameters);
+        } catch (RegisterException $e) {
             return [
-                'global' => 'Une erreur s’est produite lors de la création de votre compte. Veuillez réessayer ultérieurement.',
+                'global' => $e->getMessage(),
             ];
         }
-
-        $user = new User();
-        $register = $user->registerUser(
-            $parameters->post['first_name'],
-            $parameters->post['last_name'],
-            $parameters->post['email'],
-            $parameters->post['password']
-        );
 
         $isValid = RegisterValidator::validate($register);
 
@@ -53,5 +43,26 @@ class RegisterService
         }
 
         return $isValid;
+    }
+
+    private static function createRegister(Parameters $parameters): Register
+    {
+        if (is_string($parameters->post['first_name']) &&
+            is_string($parameters->post['last_name']) &&
+            is_string($parameters->post['email']) &&
+            is_string($parameters->post['password']) &&
+            is_string($parameters->post['password_confirmation'])
+        ) {
+            return new Register(
+                $parameters->post['first_name'],
+                $parameters->post['last_name'],
+                $parameters->post['email'],
+                $parameters->post['password'],
+                $parameters->post['password_confirmation']
+            );
+        }
+        throw new RegisterException(
+            'Une erreur s’est produite lors de la création de votre compte. Veuillez réessayer ultérieurement.'
+        );
     }
 }

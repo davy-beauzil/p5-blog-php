@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Validator;
 
-use App\Model\User;
+use App\Dto\Register;
 
 class RegisterValidator extends Validator
 {
     /**
      * @return true|array<string, string>
      */
-    public static function validate(User $register): bool|array
+    public static function validate(Register $register): bool|array
     {
         $errors = [];
         if (! self::biggerThan(3, $register->first_name) || ! self::onlyAlphabet($register->first_name)) {
@@ -32,6 +32,10 @@ class RegisterValidator extends Validator
             ! self::containsSpecialCharacter($register->password)
         ) {
             $errors['password'] = 'Le mot de passe doit faire 8 caractères, et comporter une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.';
+        } else {
+            if ($register->password !== $register->password_confirmation) {
+                $errors['password_confirmation'] = 'Le mot de passe est différent.';
+            }
         }
 
         return empty($errors) ? true : $errors;

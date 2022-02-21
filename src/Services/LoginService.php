@@ -18,15 +18,13 @@ class LoginService
      */
     public static function login(Parameters $parameters): bool|array
     {
-        if (! is_string($parameters->post['email']) ||
-            ! is_string($parameters->post['password'])
-        ) {
+        try {
+            $login = self::createLogin($parameters);
+        } catch (LoginException $e) {
             return [
-                'global' => 'Vos identifiants sont incorrects, veuillez réessayer.',
+                'global' => $e->getMessage(),
             ];
         }
-
-        $login = new Login($parameters->post['email'], $parameters->post['password'],);
 
         try {
             $user = UserRepository::connectByEmail($login);
@@ -38,5 +36,13 @@ class LoginService
         }
 
         return true;
+    }
+
+    private static function createLogin(Parameters $parameters): Login
+    {
+        if (is_string($parameters->post['email']) && is_string($parameters->post['password'])) {
+            return new Login($parameters->post['email'], $parameters->post['password']);
+        }
+        throw new LoginException('Vos identifiants sont incorrects, veuillez réessayer.');
     }
 }

@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Router\Router;
 use App\Server\Session;
+use App\ServiceProviders\CsrfServiceProvider;
 use Exception;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -61,5 +62,10 @@ class AbstractController
     {
         $router = new Router();
         $this->redirect($router->generateUrl($route_name, $parameters), $status_code);
+    }
+
+    public function checkCSRF(string $key, string $csrf_token): bool
+    {
+        return CsrfServiceProvider::validate($key, $csrf_token);
     }
 }
