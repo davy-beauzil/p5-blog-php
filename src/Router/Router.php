@@ -192,6 +192,7 @@ class Router
             'GET' => [
                 new Route('/', 'GET', 'homepage', 'HomepageController', 'index'),
                 new Route('/login', 'GET', 'login', 'LoginController', 'login'),
+                new Route('/logout', 'GET', 'logout', 'LoginController', 'logout'),
                 new Route('/register', 'GET', 'register', 'LoginController', 'register'),
                 new Route('/test', 'GET', 'test', 'HomepageController', 'test'),
                 new Route('/article/{id}', 'GET', 'article', 'HomepageController', 'article'),

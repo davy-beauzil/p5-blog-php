@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Router\Parameters;
+use App\ServiceProviders\AuthServiceProvider;
 use App\ServiceProviders\CsrfServiceProvider;
 use App\Services\LoginService;
 use App\Services\RegisterService;
@@ -59,5 +60,7 @@ class LoginController extends AbstractController
 
     public function logout(Parameters $parameters): void
     {
+        AuthServiceProvider::logout();
+        $this->render('homepage');
     }
 }
