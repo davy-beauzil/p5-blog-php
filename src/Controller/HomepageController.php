@@ -8,9 +8,7 @@ class HomepageController extends AbstractController
 {
     public function index(): void
     {
-        $this->render('homepage', [
-            'domain' => $_ENV['DOMAIN'],
-        ]);
+        $this->render('pages/homepage');
     }
 
     public function test(): void

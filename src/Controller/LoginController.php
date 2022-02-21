@@ -66,6 +66,6 @@ class LoginController extends AbstractController
     public function logout(Parameters $parameters): void
     {
         AuthServiceProvider::logout();
-        $this->render('homepage');
+        $this->redirectToRoute('homepage');
     }
 }
