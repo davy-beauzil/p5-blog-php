@@ -16,6 +16,10 @@ class LoginController extends AbstractController
 {
     public function login(Parameters $parameters): void
     {
+        if (AuthServiceProvider::isAuthenticated()) {
+            $this->redirectToRoute('homepage');
+        }
+
         $result = false;
         $post = $parameters->post;
 
@@ -41,6 +45,10 @@ class LoginController extends AbstractController
 
     public function register(Parameters $parameters): void
     {
+        if (AuthServiceProvider::isAuthenticated()) {
+            $this->redirectToRoute('homepage');
+        }
+
         $result = false;
 
         if ($parameters->has(

@@ -11,73 +11,46 @@ class Validator
 {
     public static function isEmail(string $email): bool
     {
-        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-
-        return true;
+        return filter_var($email, FILTER_VALIDATE_EMAIL) === false ? false : true;
     }
 
     public static function biggerThan(int $lenght, string $input): bool
     {
-        if (mb_strlen($input) <= $lenght) {
-            return false;
-        }
-
-        return true;
+        return mb_strlen($input) > $lenght;
     }
 
     public static function lowerThan(int $lenght, string $input): bool
     {
-        if (mb_strlen($input) >= $lenght) {
-            return false;
-        }
-
-        return true;
+        return mb_strlen($input) < $lenght;
     }
 
     public static function onlyAlphabet(string $input): bool
     {
-        if (! ctype_alpha($input)) {
-            return false;
-        }
-
-        return true;
+        return ctype_alpha($input);
     }
 
     public static function containsUppercase(string $input): bool
     {
-        if (! preg_match('/[A-Z]/', $input)) {
-            return false;
-        }
-
-        return true;
+        return preg_match('/[A-Z]/', $input) === 1;
     }
 
     public static function containsLowercase(string $input): bool
     {
-        if (! preg_match('/[a-z]/', $input)) {
-            return false;
-        }
-
-        return true;
+        return preg_match('/[a-z]/', $input) === 1;
     }
 
     public static function containsNumber(string $input): bool
     {
-        if (! preg_match('/\d/', $input)) {
-            return false;
-        }
-
-        return true;
+        return preg_match('/\d/', $input) === 1;
     }
 
     public static function containsSpecialCharacter(string $input): bool
     {
-        if (! preg_match('/[^a-zA-Z\d]/', $input)) {
-            return false;
-        }
+        return preg_match('/[^a-zA-Z\d]/', $input) === 1;
+    }
 
-        return true;
+    public static function validatePassword(string $password): bool
+    {
+        return preg_match('/^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$/', $password) === 1;
     }
 }
