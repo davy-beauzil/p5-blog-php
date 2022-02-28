@@ -20,9 +20,9 @@ class UserRepository extends AbstractRepository
             throw new RegisterException('Vous avez déjà un compte. Essayez de vous connecter.');
         }
 
-        $pdo = self::getPDO();
-        $sql = 'INSERT INTO users (first_name, last_name, email, password, is_author, is_admin, created_at, updated_at) VALUES (:first_name, :last_name, :email, :password, :is_author, :is_admin, :created_at, :updated_at);';
         try {
+            $pdo = self::getPDO();
+            $sql = 'INSERT INTO users (first_name, last_name, email, password, is_author, is_admin, created_at, updated_at) VALUES (:first_name, :last_name, :email, :password, :is_author, :is_admin, :created_at, :updated_at);';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'first_name' => $register->first_name,
@@ -39,8 +39,10 @@ class UserRepository extends AbstractRepository
                     'Une erreur s’est produite lors de la création de votre compte. Veuillez réessayer ultérieurement.'
                 );
             }
-        } catch (PDOException $e) {
-            die('Erreur PDO : ' . $e->getMessage());
+        } catch (PDOException) {
+            throw new RegisterException(
+                'Une erreur s’est produite lors de la création de votre compte. Veuillez réessayer ultérieurement.'
+            );
         }
     }
 

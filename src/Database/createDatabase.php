@@ -20,7 +20,7 @@ try {
         $user = $env->get('DATABASE_USER');
         $password = $env->get('DATABASE_PASSWORD');
         if (! is_string($host) || ! is_string($user) || ! is_string($password) || ! is_string($db_name)) {
-            die('Les informations de connexion à la base de données ne sont pas au bon format');
+            throw new PDOException('Les informations de connexion à la base de données ne sont pas au bon format');
         }
 
         // creation of database

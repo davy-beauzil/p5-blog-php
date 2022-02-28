@@ -24,7 +24,7 @@ class Router
     public function extractParameters(): void
     {
         if ($this->route !== null) {
-            if (! empty($_GET)) {
+            if (! empty(Get::getGlobalSession())) {
                 $this->route->getParameters()
                     ->add(Parameters::GET, Get::getGlobalSession())
                 ;

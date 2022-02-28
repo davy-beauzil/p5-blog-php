@@ -21,7 +21,7 @@ class Database
         $password = $env->get('DATABASE_PASSWORD');
 
         if (! is_string($user) || ! is_string($password) || ! is_string($db_name)) {
-            die('Les informations de connexion à la base de données ne sont pas au bon format');
+            throw new PDOException('Les informations de connexion à la base de données ne sont pas au bon format');
         }
 
         $options = [
@@ -34,14 +34,10 @@ class Database
         ];
 
         if (self::$pdo === null) {
-            try {
-                self::$pdo = new PDO(sprintf(
-                    'mysql:host=localhost;dbname=%s;charset=utf8',
-                    $db_name
-                ), $user, $password, $options);
-            } catch (PDOException $e) {
-                die('Erreur lors de la connexion à la base de données : ' . $e->getMessage());
-            }
+            self::$pdo = new PDO(sprintf(
+                'mysql:host=localhost;dbname=%s;charset=utf8',
+                $db_name
+            ), $user, $password, $options);
         }
 
         return self::$pdo;
