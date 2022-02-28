@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : ven. 04 fév. 2022 à 17:22
+-- Généré le : mar. 15 fév. 2022 à 16:09
 -- Version du serveur :  8.0.27-0ubuntu0.20.04.1
 -- Version de PHP : 7.4.27
 
@@ -34,8 +34,8 @@ CREATE TABLE `article` (
   `excerpt` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `user_id` int NOT NULL,
-  `created_at` date NOT NULL,
-  `updated_at` date NOT NULL
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -50,8 +50,8 @@ CREATE TABLE `comment` (
   `is_approuved` tinyint(1) NOT NULL,
   `user_id` int NOT NULL,
   `article_id` int NOT NULL,
-  `created_at` date NOT NULL,
-  `updated_at` date NOT NULL
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -62,13 +62,13 @@ CREATE TABLE `comment` (
 
 CREATE TABLE `contact` (
   `id` int NOT NULL,
-  `firstname` varchar(255) DEFAULT NULL,
-  `lastname` varchar(255) DEFAULT NULL,
-  `mail` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `message` text,
   `user_id` int DEFAULT NULL,
-  `created_at` date NOT NULL,
-  `updated_at` date NOT NULL
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -79,14 +79,14 @@ CREATE TABLE `contact` (
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `firstname` varchar(255) NOT NULL,
-  `lastname` varchar(255) NOT NULL,
-  `mail` varchar(255) NOT NULL,
+  `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `password` varchar(255) NOT NULL,
   `is_author` tinyint(1) NOT NULL,
   `is_admin` tinyint(1) NOT NULL,
-  `created_at` date NOT NULL,
-  `updated_at` date NOT NULL
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -147,7 +147,7 @@ ALTER TABLE `contact`
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Contraintes pour les tables déchargées

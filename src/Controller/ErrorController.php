@@ -6,8 +6,10 @@ namespace App\Controller;
 
 class ErrorController extends AbstractController
 {
-    public function pageNotFound()
+    public function pageNotFound(string $message = null): void
     {
-        $this->render('errors/404');
+        $this->render('errors/404', [
+            'error' => $message,
+        ]);
     }
 }

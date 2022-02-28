@@ -6,22 +6,15 @@ namespace App\Controller;
 
 class HomepageController extends AbstractController
 {
-    public function index()
+    public function index(): void
+    {
+        $this->render('pages/homepage');
+    }
+
+    public function test(): void
     {
         $this->render('homepage', [
             'domain' => $_ENV['DOMAIN'],
         ]);
-    }
-
-    public function test()
-    {
-        $this->render('homepage', [
-            'domain' => $_ENV['DOMAIN'],
-        ]);
-    }
-
-    public function article(array $parameters)
-    {
-        dd('je suis sur la bonne route');
     }
 }

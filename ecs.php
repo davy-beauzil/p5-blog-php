@@ -112,6 +112,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set(Option::PATHS, [__DIR__])
         ->set(Option::SKIP, [
             __DIR__ . '/src/Kernel.php',
+            __DIR__ . '/src/ServiceProviders/AuthServiceProvider.php',
             __DIR__ . '/assets',
             __DIR__ . '/bin',
             __DIR__ . '/config',

@@ -4,8 +4,24 @@ declare(strict_types=1);
 
 namespace App\Server;
 
+use function array_key_exists;
+
 class Post
 {
+    /**
+     * Determine if all keys exist.
+     */
+    public static function has(string ...$keys): bool
+    {
+        foreach ($keys as $key) {
+            if (! array_key_exists($key, self::getGlobalSession())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Affect asked value to asked SuperGlobal $_POST.
      */

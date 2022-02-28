@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Router\Router;
+use App\Server\Session;
+use App\ServiceProviders\CsrfServiceProvider;
 use Exception;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -18,9 +20,9 @@ class AbstractController
     {
         try {
             $this->renderView($view, $parameters);
-        } catch (Exception) {
+        } catch (Exception $e) {
             $errorController = new ErrorController();
-            $errorController->pageNotFound();
+            $errorController->pageNotFound($e->getMessage());
         }
     }
 
@@ -29,10 +31,20 @@ class AbstractController
      */
     public function renderView(string $view, array $parameters = []): void
     {
-        $loader = new FilesystemLoader(__DIR__ . '/../View');
+        $loader = new FilesystemLoader(__DIR__ . '/../../templates');
         if (! $loader->exists($view . '.html.twig')) {
-            throw new Exception('Une erreur s’est produite lors du rendu.');
+            throw new Exception(sprintf(
+                'Une erreur s’est produite lors du rendu avec le fichier %s.html.twig',
+                $view
+            ));
         }
+
+        // on récupère l'utilisateur courant pour le rendre accessible globalement depuis twig
+        $user = Session::get('user');
+        if ($user !== null) {
+            $parameters['user'] = $user;
+        }
+
         $twig = new Environment($loader, []);
         $template = $twig->load($view . '.html.twig');
         $template->display($parameters);
@@ -46,9 +58,14 @@ class AbstractController
     /**
      * @param array<string, mixed> $parameters
      */
-    public function redirectToRoute(string $route_name, array $parameters, int $status_code = 302): void
+    public function redirectToRoute(string $route_name, array $parameters = [], int $status_code = 302): void
     {
         $router = new Router();
         $this->redirect($router->generateUrl($route_name, $parameters), $status_code);
+    }
+
+    public function checkCSRF(string $key, string $csrf_token): bool
+    {
+        return CsrfServiceProvider::validate($key, $csrf_token);
     }
 }
