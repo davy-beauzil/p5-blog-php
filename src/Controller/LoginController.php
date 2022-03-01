@@ -9,6 +9,9 @@ use App\ServiceProviders\AuthServiceProvider;
 use App\ServiceProviders\CsrfServiceProvider;
 use App\Services\LoginService;
 use App\Services\RegisterService;
+use App\Voters\LoginOrRegisterVoter;
+use App\Voters\LogoutVoter;
+use App\Voters\Voters;
 use function is_array;
 use function is_string;
 
@@ -16,7 +19,7 @@ class LoginController extends AbstractController
 {
     public function login(Parameters $parameters): void
     {
-        if (AuthServiceProvider::isAuthenticated()) {
+        if (! Voters::vote(LoginOrRegisterVoter::LOGIN)) {
             $this->redirectToRoute('homepage');
         }
 
@@ -45,7 +48,7 @@ class LoginController extends AbstractController
 
     public function register(Parameters $parameters): void
     {
-        if (AuthServiceProvider::isAuthenticated()) {
+        if (! Voters::vote(LoginOrRegisterVoter::REGISTER)) {
             $this->redirectToRoute('homepage');
         }
 
@@ -73,6 +76,9 @@ class LoginController extends AbstractController
 
     public function logout(Parameters $parameters): void
     {
+        if (! Voters::vote(LogoutVoter::LOGOUT)) {
+            $this->redirectToRoute('homepage');
+        }
         AuthServiceProvider::logout();
         $this->redirectToRoute('homepage');
     }
