@@ -53,6 +53,7 @@ class AbstractController
     public function redirect(string $url, int $status_code = 302): void
     {
         header('Location: ' . $url, true, $status_code);
+        exit();
     }
 
     /**
