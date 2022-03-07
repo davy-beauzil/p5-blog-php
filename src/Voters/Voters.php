@@ -28,7 +28,7 @@ class Voters
 
     private static function addVoters(): void
     {
-        self::$voters[] = new LoginOrRegisterVoter();
-        self::$voters[] = new LogoutVoter();
+        self::$voters[] = new IsLoggedInVoter();
+        self::$voters[] = new IsCurrentUserVoter();
     }
 }

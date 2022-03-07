@@ -22,10 +22,10 @@
                         <label class="form-label">
                             Prénom
                         </label>
-                        <input type="text" name="first_name" id="first_name" class="form-control {% if errors.first_name %}is-invalid{% endif %}" placeholder="Joe" required>
-                        {% if errors.first_name %}
-                        <div id="first_name_error" class="invalid-feedback">
-                            {{ errors.first_name }}
+                        <input type="text" name="firstName" id="firstName" class="form-control {% if errors.firstName %}is-invalid{% endif %}" placeholder="Joe" required>
+                        {% if errors.firstName %}
+                        <div id="firstName_error" class="invalid-feedback">
+                            {{ errors.firstName }}
                         </div>
                         {% endif %}
                     </div>
@@ -33,10 +33,10 @@
                         <label class="form-label">
                             Nom
                         </label>
-                        <input type="text" name="last_name" id="last_name" class="form-control {% if errors.last_name %}is-invalid{% endif %}" placeholder="Williams" required>
-                        {% if errors.last_name %}
-                            <div id="last_name_error" class="invalid-feedback">
-                                {{ errors.last_name }}
+                        <input type="text" name="lastName" id="lastName" class="form-control {% if errors.lastName %}is-invalid{% endif %}" placeholder="Williams" required>
+                        {% if errors.lastName %}
+                            <div id="lastName_error" class="invalid-feedback">
+                                {{ errors.lastName }}
                             </div>
                         {% endif %}
                     </div>
@@ -119,20 +119,20 @@
 {#            {% endif %}#}
 {#            <form action="/register" method="post">#}
 {#                <div class="mb-3">#}
-{#                    <label for="first_name" class="form-label">Prénom</label>#}
-{#                    <input type="text" class="form-control {% if errors.first_name %}is-invalid{% endif %}" id="first_name" name="first_name" aria-describedby="first_name_error" required>#}
-{#                    {% if errors.first_name %}#}
-{#                    <div id="first_name_error" class="invalid-feedback">#}
-{#                        {{ errors.first_name }}#}
+{#                    <label for="firstName" class="form-label">Prénom</label>#}
+{#                    <input type="text" class="form-control {% if errors.firstName %}is-invalid{% endif %}" id="firstName" name="firstName" aria-describedby="firstName_error" required>#}
+{#                    {% if errors.firstName %}#}
+{#                    <div id="firstName_error" class="invalid-feedback">#}
+{#                        {{ errors.firstName }}#}
 {#                    </div>#}
 {#                    {% endif %}#}
 {#                </div>#}
 {#                <div class="mb-3">#}
-{#                    <label for="last_name" class="form-label">Nom</label>#}
-{#                    <input type="text" class="form-control {% if errors.last_name %}is-invalid{% endif %}" id="last_name" name="last_name" aria-describedby="last_name_error" required>#}
-{#                    {% if errors.last_name %}#}
-{#                    <div id="last_name_error" class="invalid-feedback">#}
-{#                        {{ errors.last_name }}#}
+{#                    <label for="lastName" class="form-label">Nom</label>#}
+{#                    <input type="text" class="form-control {% if errors.lastName %}is-invalid{% endif %}" id="lastName" name="lastName" aria-describedby="lastName_error" required>#}
+{#                    {% if errors.lastName %}#}
+{#                    <div id="lastName_error" class="invalid-feedback">#}
+{#                        {{ errors.lastName }}#}
 {#                    </div>#}
 {#                    {% endif %}#}
 {#                </div>#}

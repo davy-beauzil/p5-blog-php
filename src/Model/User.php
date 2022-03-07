@@ -8,26 +8,26 @@ class User
 {
     public int $id;
 
-    public string $first_name;
+    public string $firstName;
 
-    public string $last_name;
+    public string $lastName;
 
     public string $email;
 
     public string $password;
 
-    public bool $is_author;
+    public bool $isAuthor;
 
-    public bool $is_admin;
+    public bool $isAdmin;
 
-    public int $created_at;
+    public int $createdAt;
 
-    public int $updated_at;
+    public int $updatedAt;
 
-    public function registerUser(string $first_name, string $last_name, string $email, string $password,): self
+    public function registerUser(string $firstName, string $lastName, string $email, string $password,): self
     {
-        $this->first_name = $first_name;
-        $this->last_name = $last_name;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
         $this->email = $email;
         $this->password = $password;
 

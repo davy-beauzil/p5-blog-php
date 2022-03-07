@@ -14,12 +14,12 @@ class RegisterValidator extends Validator
     public static function validate(Register $register): bool|array
     {
         $errors = [];
-        if (! self::biggerThan(2, $register->first_name) || ! self::onlyAlphabet($register->first_name)) {
-            $errors['first_name'] = 'Le prénom doit faire au moins 3 caractères';
+        if (! self::biggerThan(2, $register->firstName) || ! self::onlyAlphabet($register->firstName)) {
+            $errors['firstName'] = 'Le prénom doit faire au moins 3 caractères';
         }
 
-        if (! self::biggerThan(2, $register->last_name) || ! self::onlyAlphabet($register->last_name)) {
-            $errors['last_name'] = 'Le nom doit faire au moins 3 caractères';
+        if (! self::biggerThan(2, $register->lastName) || ! self::onlyAlphabet($register->lastName)) {
+            $errors['lastName'] = 'Le nom doit faire au moins 3 caractères';
         }
         if (! self::isEmail($register->email)) {
             $errors['email'] = 'L’adresse mail est invalide';

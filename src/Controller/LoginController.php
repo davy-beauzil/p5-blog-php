@@ -9,8 +9,7 @@ use App\ServiceProviders\AuthServiceProvider;
 use App\ServiceProviders\CsrfServiceProvider;
 use App\Services\LoginService;
 use App\Services\RegisterService;
-use App\Voters\LoginOrRegisterVoter;
-use App\Voters\LogoutVoter;
+use App\Voters\IsLoggedInVoter;
 use App\Voters\Voters;
 use function is_array;
 use function is_string;
@@ -19,7 +18,7 @@ class LoginController extends AbstractController
 {
     public function login(Parameters $parameters): void
     {
-        if (! Voters::vote(LoginOrRegisterVoter::LOGIN)) {
+        if (Voters::vote(IsLoggedInVoter::IS_LOGGED_IN)) {
             $this->redirectToRoute('homepage');
         }
 
@@ -33,14 +32,22 @@ class LoginController extends AbstractController
         ) {
             $result = LoginService::login($parameters);
             if ($result === true) {
-                $this->redirectToRoute('homepage');
+                $this->redirectToRoute('homepage', [
+                    'messages' => [
+                        [
+                            'type' => 'success',
+                            'text' => 'Vous êtes maintenant connecté',
+                        ],
+                        
+                    ],
+                ]);
             }
 
             $filler['email'] = $post['email'];
         }
 
         $this->render('login/login', [
-            'errors' => is_array($result) ? $result : null,
+            'messages' => [$result],
             'filler' => $filler ?? null,
             'csrf' => CsrfServiceProvider::generate('login'),
         ]);
@@ -48,7 +55,7 @@ class LoginController extends AbstractController
 
     public function register(Parameters $parameters): void
     {
-        if (! Voters::vote(LoginOrRegisterVoter::REGISTER)) {
+        if (Voters::vote(IsLoggedInVoter::IS_LOGGED_IN)) {
             $this->redirectToRoute('homepage');
         }
 
@@ -56,8 +63,8 @@ class LoginController extends AbstractController
 
         if ($parameters->has(
             Parameters::POST,
-            'first_name',
-            'last_name',
+            'firstName',
+            'lastName',
             'email',
             'password',
             'password_confirmation'
@@ -76,7 +83,7 @@ class LoginController extends AbstractController
 
     public function logout(Parameters $parameters): void
     {
-        if (! Voters::vote(LogoutVoter::LOGOUT)) {
+        if (! Voters::vote(IsLoggedInVoter::IS_LOGGED_IN)) {
             $this->redirectToRoute('homepage');
         }
         AuthServiceProvider::logout();

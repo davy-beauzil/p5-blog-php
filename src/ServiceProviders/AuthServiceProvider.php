@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\ServiceProviders;
 
+use App\Dto\User;
 use App\Server\Session;
 
 class AuthServiceProvider
 {
-    /**
-     * @return array<string, mixed>|null
-     */
-    public static function getUser(): ?array
+    public static function getUser(): ?User
     {
         if (self::isAuthenticated()) {
-            /** @var array<string, mixed> $user */
+            /** @var User $user */
             $user = Session::get('user');
             return $user;
         }

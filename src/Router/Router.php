@@ -16,6 +16,16 @@ use function is_string;
 
 class Router
 {
+    public const GET = ['GET', 'GET'];
+
+    public const POST = ['post', 'POST'];
+
+    public const PUT = ['put', 'PUT'];
+
+    public const PATCH = ['patch', 'PATCH'];
+
+    public const DELETE = ['delete', 'DELETE'];
+
     public ?Route $route = null;
 
     /**
@@ -30,28 +40,28 @@ class Router
                 ;
             }
 
-            if (in_array($this->route->getMethod(), ['PUT', 'PATCH', 'DELETE'], true)) {
-                if (file_get_contents('php://input')) {
-                    /** @var array<string, mixed> $parameters */
-                    $parameters = json_decode(file_get_contents('php://input'), true);
-                    switch ($this->route->getMethod()) {
-                        case 'PUT':
-                            $this->route->getParameters()
-                                ->add(Parameters::PUT, $parameters)
-                            ;
-                                // no break
-                        case 'PATCH':
-                            $this->route->getParameters()
-                                ->add(Parameters::PATCH, $parameters)
-                            ;
-                                // no break
-                        case 'DELETE':
-                            $this->route->getParameters()
-                                ->add(Parameters::DELETE, $parameters)
-                            ;
-                    }
+            if (in_array($this->route->getMethod(), self::PUT + self::PATCH + self::DELETE, true)) {
+                switch ($this->route->getMethod()) {
+                    case 'PUT':
+                    case 'put':
+                        $this->route->getParameters()
+                            ->add(Parameters::PUT, Post::getGlobalSession())
+                        ;
+                        break;
+                    case 'PATCH':
+                    case 'patch':
+                        $this->route->getParameters()
+                            ->add(Parameters::PATCH, Post::getGlobalSession())
+                        ;
+                        break;
+                    case 'DELETE':
+                    case 'delete':
+                        $this->route->getParameters()
+                            ->add(Parameters::DELETE, Post::getGlobalSession())
+                        ;
+                        break;
                 }
-            } elseif ($this->route->getMethod() === 'POST') {
+            } elseif (in_array($this->route->getMethod(), self::POST, true)) {
                 $this->route->getParameters()
                     ->add(Parameters::POST, Post::getGlobalSession())
                 ;
@@ -189,31 +199,31 @@ class Router
     public function getRoutes(string $method = 'GET'): array
     {
         return match ($method) {
-            'GET' => [
+            'GET', 'get' => [
                 new Route('/', 'GET', 'homepage', 'HomepageController', 'index'),
                 new Route('/login', 'GET', 'login', 'LoginController', 'login'),
                 new Route('/logout', 'GET', 'logout', 'LoginController', 'logout'),
                 new Route('/register', 'GET', 'register', 'LoginController', 'register'),
-                new Route('/test', 'GET', 'test', 'HomepageController', 'test'),
-                new Route('/article/{id}', 'GET', 'article', 'HomepageController', 'article'),
+
+                new Route('/myAccount', 'GET', 'myAccount', 'UserController', 'myAccount'),
                 new Route(
-                    '/article/{article_id}/comment/{comment_id}',
+                    '/myAccount/update/password',
                     'GET',
-                    'comment',
-                    'HomepageController',
-                    'article'
+                    'myAccountPasswordUpdate',
+                    'UserController',
+                    'myAccountPasswordUpdate'
                 ),
+                new Route('/user/{id}', 'GET', 'user', 'UserController', 'profile'),
             ],
-            'POST' => [
+            'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
                 new Route('/register', 'POST', 'register', 'LoginController', 'register'),
             ],
-            'PUT' => [new Route('/article/{id}', 'PUT', 'article', 'HomepageController', 'article')],
+            'PUT', 'put' => [
+                new Route('/myAccount/update', 'PUT', 'myAccountUpdate', 'UserController', 'myAccountUpdate'),
+                new Route('/article/{id}', 'PUT', 'article', 'HomepageController', 'article'),
+            ],
             default => [],
         };
-    }
-
-    public function addRoute(Route $route, string $method): void
-    {
     }
 }

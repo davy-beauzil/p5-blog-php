@@ -47,15 +47,15 @@ class RegisterService
 
     private static function createRegister(Parameters $parameters): Register
     {
-        if (is_string($parameters->post['first_name']) &&
-            is_string($parameters->post['last_name']) &&
+        if (is_string($parameters->post['firstName']) &&
+            is_string($parameters->post['lastName']) &&
             is_string($parameters->post['email']) &&
             is_string($parameters->post['password']) &&
             is_string($parameters->post['password_confirmation'])
         ) {
             return new Register(
-                $parameters->post['first_name'],
-                $parameters->post['last_name'],
+                $parameters->post['firstName'],
+                $parameters->post['lastName'],
                 $parameters->post['email'],
                 $parameters->post['password'],
                 $parameters->post['password_confirmation']

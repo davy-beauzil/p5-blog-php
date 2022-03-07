@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace App\Voters;
 
+use App\Dto\User;
 use App\Server\Session;
-use function array_key_exists;
-use function is_array;
 
-class LogoutVoter implements VoterInterface
+class IsLoggedInVoter implements VoterInterface
 {
-    public const LOGOUT = 'logout';
+    public const IS_LOGGED_IN = 'isLoggedIn';
 
     public function canVote(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::LOGOUT;
+        return $attribute === self::IS_LOGGED_IN;
     }
 
     public function vote(string $attribute, mixed $subject): bool
     {
         $user = Session::get('user');
 
-        return $user !== null && is_array($user) && array_key_exists('id', $user);
+        return $user instanceof User;
     }
 }

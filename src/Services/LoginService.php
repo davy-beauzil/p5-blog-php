@@ -20,22 +20,16 @@ class LoginService
     {
         try {
             $login = self::createLogin($parameters);
-        } catch (LoginException $e) {
-            return [
-                'global' => $e->getMessage(),
-            ];
-        }
-
-        try {
             $user = UserRepository::connectByEmail($login);
             Session::put('user', $user);
+
+            return true;
         } catch (LoginException $e) {
             return [
-                'global' => $e->getMessage(),
+                'type' => 'error',
+                'text' => $e->getMessage(),
             ];
         }
-
-        return true;
     }
 
     private static function createLogin(Parameters $parameters): Login
