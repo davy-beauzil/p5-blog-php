@@ -23,7 +23,7 @@ class UserController extends AbstractController
 
     public function myAccountUpdate(Parameters $parameters): void
     {
-        if (! Voters::vote(IsCurrentUserVoter::IS_SAME, $parameters->put['id'])) {
+        if (! Voters::vote(IsCurrentUserVoter::IS_SAME, (int) ($parameters->put['id']))) {
             $this->redirectToRoute('homepage');
         }
         $result = [];

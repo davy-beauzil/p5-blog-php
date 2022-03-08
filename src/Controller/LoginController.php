@@ -38,7 +38,6 @@ class LoginController extends AbstractController
                             'type' => 'success',
                             'text' => 'Vous êtes maintenant connecté',
                         ],
-                        
                     ],
                 ]);
             }
