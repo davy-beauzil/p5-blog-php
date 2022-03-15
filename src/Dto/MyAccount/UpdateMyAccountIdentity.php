@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Dto;
+namespace App\Dto\MyAccount;
 
-class MyAccountUpdate
+class UpdateMyAccountIdentity
 {
     public function __construct(
-        public int $id,
+        public string $id,
         public string $firstName,
         public string $lastName,
     ) {

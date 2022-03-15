@@ -5,56 +5,55 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Dto\Login;
-use App\Dto\MyAccountUpdate;
+use App\Dto\MyAccount\UpdateMyAccountIdentity;
 use App\Dto\Register;
-use App\Dto\User;
-use App\Exception\LoginException;
-use App\Exception\RegisterException;
+use App\Model\User;
+use App\Services\Exception\LoginException;
+use App\Services\Exception\RegisterException;
+use App\Services\Exception\UpdateMyAccountIdentityException;
+use App\SuperGlobals\Session;
 use function array_key_exists;
 use function count;
-use DateTime;
-use DateTimeImmutable;
 use function is_int;
 use function is_string;
 use PDOException;
 
 class UserRepository extends AbstractRepository
 {
-    public static function create(Register $register): void
+    public function create(Register $register): void
     {
         if (self::userExists('email', $register->email)) {
             throw new RegisterException('Vous avez déjà un compte. Essayez de vous connecter.');
         }
 
-        try {
-            $pdo = self::getPDO();
-            $sql = 'INSERT INTO users (first_name, last_name, email, password, is_author, is_admin, created_at, updated_at) VALUES (:first_name, :last_name, :email, :password, :is_author, :is_admin, :created_at, :updated_at);';
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                'first_name' => $register->firstName,
-                'last_name' => $register->lastName,
-                'email' => $register->email,
-                'password' => $register->password,
-                'is_author' => 0,
-                'is_admin' => 0,
-                'created_at' => time(),
-                'updated_at' => time(),
-            ]);
-            if (! self::userExists('email', $register->email)) { // @phpstan-ignore-line
-                throw new RegisterException(
-                    'Une erreur s’est produite lors de la création de votre compte. Veuillez réessayer ultérieurement.'
-                );
-            }
-        } catch (PDOException) {
-            throw new RegisterException(
-                'Une erreur s’est produite lors de la création de votre compte. Veuillez réessayer ultérieurement.'
-            );
+        $pdo = self::getPDO();
+        $sql = 'INSERT INTO users (firstName, lastName, email, password, isAuthor, isAdmin, createdAt, updatedAt) VALUES (:firstName, :lastName, :email, :password, :isAuthor, :isAdmin, :createdAt, :updatedAt);';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'firstName' => $register->firstName,
+            'lastName' => $register->lastName,
+            'email' => $register->email,
+            'password' => $register->password,
+            'isAuthor' => 0,
+            'isAdmin' => 0,
+            'createdAt' => time(),
+            'updatedAt' => time(),
+        ]);
+        if ($stmt->rowCount() <= 0) {
+            throw new RegisterException('Votre compte n’a pas pu être créé, veuillez réessayer ultérieurement.');
         }
     }
 
-    public static function userExists(string $field, string $value): bool
+    public function userExists(string $field, string $value): bool
     {
-        $pdo = self::getPDO();
+        try {
+            $pdo = self::getPDO();
+        } catch (PDOException) {
+            throw new PDOException(
+                'Impossible de récupérer une instance PDO. Vérifiez que la base de données est bien démarrée.'
+            );
+        }
+
         $sql = 'SELECT email FROM users WHERE ' . $field . ' = :value;';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -65,7 +64,7 @@ class UserRepository extends AbstractRepository
         return $result !== false && count($result) >= 1;
     }
 
-    public static function connectByEmail(Login $login): User
+    public function connectByEmail(Login $login): void
     {
         $pdo = self::getPDO();
         $sql = 'SELECT * FROM users WHERE email = :email';
@@ -73,35 +72,39 @@ class UserRepository extends AbstractRepository
         $stmt->execute([
             'email' => $login->email,
         ]);
-        /** @var array<string, mixed> $result */
-        $result = $stmt->fetch();
+        /** @var User $user */
+        $user = $stmt->fetchObject(User::class);
 
-        if ($result['id'] !== null && isset($result['password']) && is_string($result['password'])) {
-            if (! password_verify($login->password, $result['password'])) {
-                throw new LoginException('Vos identifiants sont incorrects, veuillez réessayer.');
-            }
-            unset($result['password']); // On supprime le mot de passe car l'objet $user sera dans la session
-
-            return self::arrayToUser($result);
+        if (
+            $user->id === null ||
+            ! is_string($user->password) ||
+            ! password_verify($login->password, $user->password)
+        ) {
+            throw new LoginException('Vos identifiants sont incorrects, veuillez réessayer.');
         }
-        throw new LoginException('Vos identifiants sont incorrects, veuillez réessayer.');
+        $user->password = null;
+        Session::put('user', $user);
     }
 
-    public static function updateInformations(MyAccountUpdate $myAccount): void
+    public function updateIdentity(UpdateMyAccountIdentity $myAccount): User
     {
-        if (self::userExists('id', (string) ($myAccount->id))) {
+        if (self::userExists('id', $myAccount->id)) {
             $pdo = self::getPDO();
             $sql = 'UPDATE users SET firstName = :firstName, lastName = :lastName, updatedAt = ' . time() . ' WHERE id = :id';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                'id' => (string) ($myAccount->id),
+                'id' => $myAccount->id,
                 'firstName' => $myAccount->firstName,
                 'lastName' => $myAccount->lastName,
             ]);
+            if ($stmt->rowCount() > 0) {
+                return $this->getUser('id', $myAccount->id);
+            }
         }
+        throw new UpdateMyAccountIdentityException('Votre compte n’a pas pu être mis à jour, veuillez réessayer');
     }
 
-    public static function getUser(string $field, string $value): User
+    public function getUser(string $field, string $value): User
     {
         $pdo = self::getPDO();
         $sql = 'SELECT id, firstName, lastName, email, isAuthor, isAdmin, createdAt, updatedAt FROM users WHERE ' . $field . ' = :value LIMIT 1;';
@@ -118,7 +121,7 @@ class UserRepository extends AbstractRepository
     /**
      * @param array<string, mixed> $array
      */
-    private static function arrayToUser(array $array): User
+    private function arrayToUser(array $array): User
     {
         $user = new User();
         if (array_key_exists('id', $array) && is_int($array['id'])) {
@@ -140,14 +143,10 @@ class UserRepository extends AbstractRepository
             $user->isAdmin = $array['isAdmin'] === 0 ? false : true;
         }
         if (array_key_exists('createdAt', $array) && is_int($array['createdAt'])) {
-            $datetime = new DateTime();
-            $datetime->setTimestamp($array['createdAt']);
-            $user->createdAt = DateTimeImmutable::createFromMutable($datetime);
+            $user->createdAt = $array['createdAt'];
         }
         if (array_key_exists('updatedAt', $array) && is_int($array['updatedAt'])) {
-            $datetime = new DateTime();
-            $datetime->setTimestamp($array['updatedAt']);
-            $user->updatedAt = DateTimeImmutable::createFromMutable($datetime);
+            $user->updatedAt = $array['updatedAt'];
         }
 
         return $user;

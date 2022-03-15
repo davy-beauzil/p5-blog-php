@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Router;
 
 use App\Controller\ErrorController;
-use App\Server\Env;
-use App\Server\Get;
-use App\Server\Post;
+use App\SuperGlobals\Env;
+use App\SuperGlobals\Get;
+use App\SuperGlobals\Post;
 use function array_key_exists;
 use function count;
 use Exception;
@@ -201,9 +201,9 @@ class Router
         return match ($method) {
             'GET', 'get' => [
                 new Route('/', 'GET', 'homepage', 'HomepageController', 'index'),
-                new Route('/login', 'GET', 'login', 'LoginController', 'login'),
-                new Route('/logout', 'GET', 'logout', 'LoginController', 'logout'),
-                new Route('/register', 'GET', 'register', 'LoginController', 'register'),
+                new Route('/login', 'GET', 'login', 'LoginController', 'loginIndex'),
+                new Route('/logout', 'GET', 'logout', 'LogoutController', 'logout'),
+                new Route('/register', 'GET', 'registerIndex', 'RegisterController', 'registerIndex'),
 
                 new Route('/myAccount', 'GET', 'myAccount', 'UserController', 'myAccount'),
                 new Route(
@@ -217,10 +217,16 @@ class Router
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
-                new Route('/register', 'POST', 'register', 'LoginController', 'register'),
+                new Route('/register', 'POST', 'register', 'RegisterController', 'register'),
             ],
             'PUT', 'put' => [
-                new Route('/myAccount/update', 'PUT', 'myAccountUpdate', 'UserController', 'myAccountUpdate'),
+                new Route(
+                    '/myAccount/update',
+                    'PUT',
+                    'updateMyAccountIdentity',
+                    'UserController',
+                    'updateMyAccountIdentity'
+                ),
                 new Route('/article/{id}', 'PUT', 'article', 'HomepageController', 'article'),
             ],
             default => [],

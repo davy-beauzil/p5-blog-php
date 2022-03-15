@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Router\Router;
-use App\Server\Session;
-use App\ServiceProviders\CsrfServiceProvider;
+use App\Services\CsrfServiceProvider;
+use App\SuperGlobals\Session;
 use Exception;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;

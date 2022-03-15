@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Voters;
+namespace App\Services\Voters;
 
-use App\Dto\User;
-use App\Exception\VoterException;
-use App\ServiceProviders\AuthServiceProvider;
+use App\Model\User;
+use App\Services\AuthServiceProvider;
+use App\Services\Exception\VoterException;
 use function is_int;
 
 class IsCurrentUserVoter implements VoterInterface

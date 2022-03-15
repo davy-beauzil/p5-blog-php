@@ -4,38 +4,104 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\MyAccount\UpdateMyAccountIdentity;
+use App\Repository\UserRepository;
 use App\Router\Parameters;
-use App\Services\MyAccountService;
-use App\Voters\IsCurrentUserVoter;
-use App\Voters\IsLoggedInVoter;
-use App\Voters\Voters;
+use App\Services\CsrfServiceProvider;
+use App\Services\Exception\UpdateMyAccountIdentityException;
+use App\Services\Validator\UpdateMyAccountIdentityValidator;
+use App\Services\Voters\IsCurrentUserVoter;
+use App\Services\Voters\IsLoggedInVoter;
+use App\Services\Voters\Voters;
+use App\SuperGlobals\Session;
+use function is_string;
 
 class UserController extends AbstractController
 {
-    public function myAccount(Parameters $parameters): void
-    {
-        if (! Voters::vote(IsLoggedInVoter::IS_LOGGED_IN)) {
-            $this->redirectToRoute('homepage');
-        }
+    public const CSRF_IDENTITY_ID = 'updateMyAccountIdentity';
 
-        $this->render('user/myAccount');
+    public const CSRF_PASSWORD_ID = 'updateMyAccountPassword';
+
+    private Voters $voters;
+
+    private UpdateMyAccountIdentityValidator $identityValidator;
+
+    private UserRepository $userRepository;
+
+    public function __construct()
+    {
+        $this->voters = new Voters();
+        $this->identityValidator = new UpdateMyAccountIdentityValidator();
+        $this->userRepository = new UserRepository();
     }
 
-    public function myAccountUpdate(Parameters $parameters): void
+    /**
+     * Affiche la page du compte courant.
+     */
+    public function myAccount(): void
     {
-        if (! Voters::vote(IsCurrentUserVoter::IS_SAME, (int) ($parameters->put['id']))) {
+        if (! $this->voters->vote(IsLoggedInVoter::IS_LOGGED_IN)) {
             $this->redirectToRoute('homepage');
         }
-        $result = [];
-        if ($parameters->has(Parameters::PUT, 'id', 'firstName', 'lastName')) {
-            $result = MyAccountService::updateInformations($parameters);
-        }
         $this->render('user/myAccount', [
-            'messages' => [$result],
+            'csrf' => CsrfServiceProvider::generate(self::CSRF_IDENTITY_ID),
         ]);
     }
 
-    public function myAccountUpdatePassword(Parameters $parameters): void
+    /**
+     * Modification du compte courant (nom & prénom).
+     */
+    public function updateMyAccountIdentity(Parameters $parameters): void
     {
+        if (! $this->voters->vote(IsCurrentUserVoter::IS_SAME, $parameters->put['id'])) {
+            $this->redirectToRoute('homepage');
+        }
+
+        try {
+            $identity = $this->checkMyAccountUpdate($parameters);
+            $user = $this->userRepository->updateIdentity($identity);
+            Session::forget('user');
+            Session::put('user', $user);
+        } catch (UpdateMyAccountIdentityException) {
+            $this->render('user/myAccount', [
+                'messages' => [[
+                    'type' => 'error',
+                    'text' => 'Une erreur est survenue lors de la mise à jour de votre compte, veuillez réessayer.',
+                ]],
+                'csrf' => CsrfServiceProvider::generate(self::CSRF_IDENTITY_ID),
+            ]);
+        }
+
+        $this->redirectToRoute('myAccount');
+    }
+
+    /**
+     * Modification du mot de passe du compte courant.
+     */
+    public function updateMyAccountPassword(): void
+    {
+    }
+
+    private function checkMyAccountUpdate(Parameters $parameters): UpdateMyAccountIdentity
+    {
+        if (! $parameters->has(Parameters::PUT, 'id', 'firstName', 'lastName', '_csrf')) {
+            throw new UpdateMyAccountIdentityException('Un des champs id, firstName, lastName ou _csrf est manquant.');
+        }
+        if (! is_string($parameters->put['_csrf'])) {
+            throw new UpdateMyAccountIdentityException(
+                'Une erreur est survenue lors de votre inscription, veuillez réessayer'
+            );
+        }
+        $updateMyAccountIdentity = $this->identityValidator->validate(
+            $parameters->put['id'],
+            $parameters->put['firstName'],
+            $parameters->put['lastName'],
+        );
+        $checkCsrf = CsrfServiceProvider::validate('updateMyAccountIdentity', $parameters->put['_csrf']);
+        if ($checkCsrf === false) {
+            throw new UpdateMyAccountIdentityException('Le CSRF n’est pas valide');
+        }
+
+        return $updateMyAccountIdentity;
     }
 }

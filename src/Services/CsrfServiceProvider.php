@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceProviders;
+namespace App\Services;
 
-use App\Server\Session;
+use App\SuperGlobals\Session;
 use function array_key_exists;
 
 class CsrfServiceProvider

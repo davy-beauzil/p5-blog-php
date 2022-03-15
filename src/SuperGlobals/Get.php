@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Server;
+namespace App\SuperGlobals;
 
 use const INPUT_GET;
 

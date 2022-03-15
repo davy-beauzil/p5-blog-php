@@ -69,10 +69,10 @@
                         <label class="form-label">
                             Confirmation du mot de passe
                         </label>
-                        <input name="password_confirmation" id="password_confirmation" class="form-control {% if errors.password_confirmation %}is-invalid{% endif %}" type="password" placeholder="Entrez à nouveau votre mot de passe" required>
-                        {% if errors.password_confirmation %}
-                            <div id="password_confirmation_error" class="invalid-feedback">
-                                {{ errors.password_confirmation }}
+                        <input name="passwordConfirmation" id="passwordConfirmation" class="form-control {% if errors.passwordConfirmation %}is-invalid{% endif %}" type="password" placeholder="Entrez à nouveau votre mot de passe" required>
+                        {% if errors.passwordConfirmation %}
+                            <div id="passwordConfirmation_error" class="invalid-feedback">
+                                {{ errors.passwordConfirmation }}
                             </div>
                         {% endif %}
                     </div>

@@ -3,9 +3,9 @@
 require_once '../vendor/autoload.php';
 
 use App\Router\Router;
-use App\Server\Post;
-use App\Server\Server;
-use App\Server\Env;
+use App\SuperGlobals\Post;
+use App\SuperGlobals\Server;
+use App\SuperGlobals\Env;
 use Symfony\Component\Dotenv\Dotenv;
 
 

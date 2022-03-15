@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Exception;
+namespace App\Services\Exception;
 
 use Exception;
 use Stringable;
 use Throwable;
 
-class MyAccountUpdateException extends Exception implements Stringable
+class UpdateMyAccountIdentityException extends Exception implements Stringable
 {
     public function __construct(string $message, int $code = 0, Throwable $previous = null)
     {

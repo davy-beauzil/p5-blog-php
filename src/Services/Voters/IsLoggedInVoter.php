@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Voters;
+namespace App\Services\Voters;
 
-use App\Dto\User;
-use App\Server\Session;
+use App\Model\User;
+use App\SuperGlobals\Session;
 
 class IsLoggedInVoter implements VoterInterface
 {
