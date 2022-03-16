@@ -6,16 +6,17 @@ namespace App\Repository;
 
 use App\Dto\Login;
 use App\Dto\MyAccount\UpdateMyAccountIdentity;
+use App\Dto\MyAccount\UpdatePassword;
 use App\Dto\Register;
 use App\Model\User;
 use App\Services\Exception\LoginException;
 use App\Services\Exception\RegisterException;
-use App\Services\Exception\UpdateMyAccountIdentityException;
+use App\Services\Exception\UpdateIdentityException;
+use App\Services\Exception\UpdatePasswordException;
 use App\SuperGlobals\Session;
-use function array_key_exists;
 use function count;
-use function is_int;
 use function is_string;
+use const PASSWORD_DEFAULT;
 use PDOException;
 
 class UserRepository extends AbstractRepository
@@ -33,7 +34,7 @@ class UserRepository extends AbstractRepository
             'firstName' => $register->firstName,
             'lastName' => $register->lastName,
             'email' => $register->email,
-            'password' => $register->password,
+            'password' => password_hash($register->password, PASSWORD_DEFAULT),
             'isAuthor' => 0,
             'isAdmin' => 0,
             'createdAt' => time(),
@@ -101,7 +102,7 @@ class UserRepository extends AbstractRepository
                 return $this->getUser('id', $myAccount->id);
             }
         }
-        throw new UpdateMyAccountIdentityException('Votre compte n’a pas pu être mis à jour, veuillez réessayer');
+        throw new UpdateIdentityException('Votre compte n’a pas pu être mis à jour, veuillez réessayer');
     }
 
     public function getUser(string $field, string $value): User
@@ -112,43 +113,38 @@ class UserRepository extends AbstractRepository
         $stmt->execute([
             'value' => $value,
         ]);
-        /** @var array<string, mixed> $result */
-        $result = $stmt->fetch();
-
-        return self::arrayToUser($result);
+        /** @var User $result */
+        return $stmt->fetchObject(User::class);
     }
 
-    /**
-     * @param array<string, mixed> $array
-     */
-    private function arrayToUser(array $array): User
+    public function getUserWithPassword(string $field, string $value): User
     {
-        $user = new User();
-        if (array_key_exists('id', $array) && is_int($array['id'])) {
-            $user->id = $array['id'];
-        }
-        if (array_key_exists('firstName', $array) && is_string($array['firstName'])) {
-            $user->firstName = $array['firstName'];
-        }
-        if (array_key_exists('lastName', $array) && is_string($array['lastName'])) {
-            $user->lastName = $array['lastName'];
-        }
-        if (array_key_exists('email', $array) && is_string($array['email'])) {
-            $user->email = $array['email'];
-        }
-        if (array_key_exists('isAuthor', $array) && is_int($array['isAuthor'])) {
-            $user->isAuthor = $array['isAuthor'] === 0 ? false : true;
-        }
-        if (array_key_exists('isAdmin', $array) && is_int($array['isAdmin'])) {
-            $user->isAdmin = $array['isAdmin'] === 0 ? false : true;
-        }
-        if (array_key_exists('createdAt', $array) && is_int($array['createdAt'])) {
-            $user->createdAt = $array['createdAt'];
-        }
-        if (array_key_exists('updatedAt', $array) && is_int($array['updatedAt'])) {
-            $user->updatedAt = $array['updatedAt'];
+        $pdo = self::getPDO();
+        $sql = 'SELECT id, firstName, lastName, email, password, isAuthor, isAdmin, createdAt, updatedAt FROM users WHERE ' . $field . ' = :value LIMIT 1;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'value' => $value,
+        ]);
+        /** @var User $result */
+        return $stmt->fetchObject(User::class);
+    }
+
+    public function changePassword(UpdatePassword $updatePassword): void
+    {
+        $user = $this->getUserWithPassword('id', $updatePassword->id);
+        if ($user->password !== null && ! password_verify($updatePassword->currentPassword, $user->password)) {
+            throw new UpdatePasswordException('L’ancien mot de passe est incorrect');
         }
 
-        return $user;
+        $pdo = self::getPDO();
+        $sql = 'UPDATE users SET password = :password, updatedAt = ' . time() . ' WHERE id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'id' => $updatePassword->id,
+            'password' => password_hash($updatePassword->newPassword, PASSWORD_DEFAULT),
+        ]);
+        if ($stmt->rowCount() <= 0) {
+            throw new UpdateIdentityException('Votre mot de passe n’a pas pu être mis à jour, veuillez réessayer');
+        }
     }
 }

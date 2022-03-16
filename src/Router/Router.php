@@ -205,9 +205,9 @@ class Router
                 new Route('/logout', 'GET', 'logout', 'LogoutController', 'logout'),
                 new Route('/register', 'GET', 'registerIndex', 'RegisterController', 'registerIndex'),
 
-                new Route('/myAccount', 'GET', 'myAccount', 'UserController', 'myAccount'),
+                new Route('/my-account', 'GET', 'myAccount', 'UserController', 'myAccount'),
                 new Route(
-                    '/myAccount/update/password',
+                    '/my-account/update/password',
                     'GET',
                     'myAccountPasswordUpdate',
                     'UserController',
@@ -220,14 +220,8 @@ class Router
                 new Route('/register', 'POST', 'register', 'RegisterController', 'register'),
             ],
             'PUT', 'put' => [
-                new Route(
-                    '/myAccount/update',
-                    'PUT',
-                    'updateMyAccountIdentity',
-                    'UserController',
-                    'updateMyAccountIdentity'
-                ),
-                new Route('/article/{id}', 'PUT', 'article', 'HomepageController', 'article'),
+                new Route('/my-account/update', 'PUT', 'updateIdentity', 'UserController', 'updateIdentity'),
+                new Route('/my-account/update/password', 'PUT', 'updatePassword', 'UserController', 'updatePassword'),
             ],
             default => [],
         };
