@@ -21,6 +21,9 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/my-account">Mon profil</a></li>
+                                {% if user.isAdmin == true %}
+                                <li><a class="dropdown-item" href="/admin/users-manager">Administration</a></li>
+                                {% endif %}
                                 <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
                             </ul>
                         </li>
