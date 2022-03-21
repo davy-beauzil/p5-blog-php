@@ -60,7 +60,7 @@ class UserController extends AbstractController
      */
     public function updateIdentity(Parameters $parameters): void
     {
-        if (! $this->voters->vote(IsCurrentUserVoter::IS_SAME, $parameters->put['id'])) {
+        if ($this->voters->vote(IsCurrentUserVoter::IS_SAME, $parameters->put['id'])) {
             $this->redirectToRoute('homepage');
         }
 

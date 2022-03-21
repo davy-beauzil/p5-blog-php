@@ -15,8 +15,7 @@ class UpdatePasswordValidator extends Validator
         mixed $currentPassword,
         mixed $newPassword,
         mixed $confirmationNewPassword
-    ): UpdatePassword
-    {
+    ): UpdatePassword {
         if (! is_string($currentPassword)) {
             throw new UpdatePasswordException('L’ancien mot de passe semble être au mauvais format');
         }

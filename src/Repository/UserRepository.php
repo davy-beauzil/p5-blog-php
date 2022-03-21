@@ -113,7 +113,7 @@ class UserRepository extends AbstractRepository
         $stmt->execute([
             'value' => $value,
         ]);
-        /** @var User $result */
+
         return $stmt->fetchObject(User::class);
     }
 
@@ -125,7 +125,7 @@ class UserRepository extends AbstractRepository
         $stmt->execute([
             'value' => $value,
         ]);
-        /** @var User $result */
+
         return $stmt->fetchObject(User::class);
     }
 
