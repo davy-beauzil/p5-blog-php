@@ -4,82 +4,87 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\Login;
+use App\Repository\UserRepository;
 use App\Router\Parameters;
-use App\ServiceProviders\AuthServiceProvider;
-use App\ServiceProviders\CsrfServiceProvider;
-use App\Services\LoginService;
-use App\Services\RegisterService;
-use App\Voters\LoginOrRegisterVoter;
-use App\Voters\LogoutVoter;
-use App\Voters\Voters;
-use function is_array;
+use App\Services\CsrfServiceProvider;
+use App\Services\Exception\LoginException;
+use App\Services\Validator\LoginValidator;
+use App\Services\Voters\IsLoggedInVoter;
+use App\Services\Voters\Voters;
+use App\SuperGlobals\Post;
 use function is_string;
 
 class LoginController extends AbstractController
 {
-    public function login(Parameters $parameters): void
+    private UserRepository $repository;
+
+    private LoginValidator $loginValidator;
+
+    private Voters $voters;
+
+    private Post $post;
+
+    public function __construct()
     {
-        if (! Voters::vote(LoginOrRegisterVoter::LOGIN)) {
+        $this->loginValidator = new LoginValidator();
+        $this->repository = new UserRepository();
+        $this->voters = new Voters();
+        $this->post = new Post();
+    }
+
+    /*
+     * GET /login
+     */
+    public function loginIndex(): void
+    {
+        if ($this->voters->vote(IsLoggedInVoter::IS_LOGGED_IN)) {
             $this->redirectToRoute('homepage');
         }
 
-        $result = false;
-        $post = $parameters->post;
-
-        if (
-            $parameters->has(Parameters::POST, 'email', 'password', '_csrf') &&
-            is_string($post['_csrf']) &&
-            $this->checkCSRF('login', $post['_csrf'])
-        ) {
-            $result = LoginService::login($parameters);
-            if ($result === true) {
-                $this->redirectToRoute('homepage');
-            }
-
-            $filler['email'] = $post['email'];
-        }
-
         $this->render('login/login', [
-            'errors' => is_array($result) ? $result : null,
-            'filler' => $filler ?? null,
             'csrf' => CsrfServiceProvider::generate('login'),
         ]);
     }
 
-    public function register(Parameters $parameters): void
+    /*
+     * POST /login
+     */
+    public function login(Parameters $parameters): void
     {
-        if (! Voters::vote(LoginOrRegisterVoter::REGISTER)) {
+        if ($this->voters->vote(IsLoggedInVoter::IS_LOGGED_IN)) {
             $this->redirectToRoute('homepage');
         }
+        $email = $this->post->get('email');
+        $password = $this->post->get('password');
+        $csrf = $this->post->get('_csrf');
 
-        $result = false;
-
-        if ($parameters->has(
-            Parameters::POST,
-            'first_name',
-            'last_name',
-            'email',
-            'password',
-            'password_confirmation'
-        )) {
-            $result = RegisterService::register($parameters);
-
-            if (! is_array($result)) {
-                $this->redirectToRoute('login');
+        if ($email !== null && $password !== null && $csrf !== null) {
+            try {
+                $login = $this->checkLogin($email, $password, $csrf);
+                $this->repository->connectByEmail($login);
+                $this->redirectToRoute('homepage');
+            } catch (LoginException $e) {
+                $this->render('login/login', [
+                    'messages' => [
+                        [
+                            'type' => 'error',
+                            'text' => $e->getMessage(),
+                        ],
+                    ],
+                ]);
             }
         }
-
-        $this->render('login/register', [
-            'errors' => is_array($result) ? $result : null,
-        ]);
     }
 
-    public function logout(Parameters $parameters): void
+    private function checkLogin(mixed $email, mixed $password, mixed $csrf): Login
     {
-        if (! Voters::vote(LogoutVoter::LOGOUT)) {
-            $this->redirectToRoute('homepage');
+        $login = $this->loginValidator->validate($email, $password);
+        $checkCsrf = is_string($csrf) && $this->checkCSRF('login', $csrf);
+        if (! $checkCsrf) {
+            throw new LoginException('Une erreur est survenue lors de la connexion, veuillez réessayer.');
         }
-        AuthServiceProvider::logout();
-        $this->redirectToRoute('homepage');
+
+        return $login;
     }
 }

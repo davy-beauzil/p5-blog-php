@@ -6,31 +6,21 @@ namespace App\Model;
 
 class User
 {
-    public int $id;
+    public ?int $id = null;
 
-    public string $first_name;
+    public ?string $firstName = null;
 
-    public string $last_name;
+    public ?string $lastName = null;
 
-    public string $email;
+    public ?string $email = null;
 
-    public string $password;
+    public ?string $password = null;
 
-    public bool $is_author;
+    public ?bool $isAuthor = null;
 
-    public bool $is_admin;
+    public ?bool $isAdmin = null;
 
-    public int $created_at;
+    public ?int $createdAt = null;
 
-    public int $updated_at;
-
-    public function registerUser(string $first_name, string $last_name, string $email, string $password,): self
-    {
-        $this->first_name = $first_name;
-        $this->last_name = $last_name;
-        $this->email = $email;
-        $this->password = $password;
-
-        return $this;
-    }
+    public ?int $updatedAt = null;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Database;
 
-use App\Server\Env;
+use App\SuperGlobals\Env;
 use function is_string;
 use PDO;
 use PDOException;

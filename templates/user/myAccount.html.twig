@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DevBlog | {{ user.firstName }} {{ user.lastName }}{% endblock %}
+
+{% block main_content %}
+    <div class="container mt-5">
+        <div class="row justify-content-between">
+            <div class="col-4">
+                <h2>Vos informations</h2>
+                <hr class="my-2">
+                <p>
+                    {{ user.firstName }} {{ user.lastName }} <br>
+                    {{ user.email }} <br>
+
+                    {% if user.isAuthor == true %}
+                    Autheur : oui
+                    {% endif %}
+
+                    {% if user.isAdmin == true %}
+                    Administrateur : oui
+                    {% endif %}
+
+                        Compte créé le : {{ user.createdAt|date('d/m/Y H:i')}} <br>
+                        Compte modifié le : {{ user.updatedAt|date('d/m/Y H:i')}}
+                </p>
+            </div>
+
+            <div class="col-7">
+                <form action="/my-account/update" method="post" data-bitwarden-watching="1">
+                    <input type="hidden" name="_method" value="put">
+
+                    <h3>Modifier vos informations</h3>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label">
+                            Prénom
+                        </label>
+                        <input type="text" name="firstName" id="firstName" class="form-control {% if errors.firstName %}is-invalid{% endif %}" placeholder="Joe" {% if user.firstName%}value="{{ user.firstName }}"{% endif%} required>
+                        {% if errors.firstName %}
+                            <div id="firstName_error" class="invalid-feedback">
+                                {{ errors.firstName }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label">
+                            Nom
+                        </label>
+                        <input type="text" name="lastName" id="lastName" class="form-control {% if errors.lastName %}is-invalid{% endif %}" placeholder="Williams" {% if user.lastName%}value="{{ user.lastName }}"{% endif%} required>
+                        {% if errors.lastName %}
+                            <div id="lastName_error" class="invalid-feedback">
+                                {{ errors.lastName }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if user.id %}
+                        <input type="hidden" name="id" value="{{ user.id }}">
+                    {% endif %}
+                    {% if csrf_identity %}
+                        <input type="hidden" name="_csrf" value="{{ csrf_identity }}">
+                    {% endif %}
+
+                    <input type="submit" class="btn btn-lg w-100 btn-primary mb-3" value="Modifier">
+                </form>
+
+
+                <form action="/my-account/update/password" method="post" data-bitwarden-watching="1">
+                    <input type="hidden" name="_method" value="put">
+
+                    <h3>Modifier votre mot de passe</h3>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label">
+                            Mot de passe actuel
+                        </label>
+                        <input type="password" name="currentPassword" id="currentPassword" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label">
+                            Nouveau mot de passe
+                        </label>
+                        <input type="password" name="newPassword" id="newPassword" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label">
+                            Confirmer votre nouveau mot de passe
+                        </label>
+                        <input type="password" name="confirmationNewPassword" id="confirmationNewPassword" class="form-control" required>
+                    </div>
+
+                    {% if user.id %}
+                        <input type="hidden" name="id" value="{{ user.id }}">
+                    {% endif %}
+                    {% if csrf_password %}
+                        <input type="hidden" name="_csrf" value="{{ csrf_password }}">
+                    {% endif %}
+
+                    <input type="submit" class="btn btn-lg w-100 btn-danger mb-3" value="Modifier">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

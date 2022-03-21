@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use App\Database\Database;
-use App\Server\Env;
+use App\SuperGlobals\Env;
 use Symfony\Component\Dotenv\Dotenv;
 
 $env = new Env();

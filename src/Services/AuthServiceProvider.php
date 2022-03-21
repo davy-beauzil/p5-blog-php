@@ -2,21 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceProviders;
+namespace App\Services;
 
-use App\Server\Session;
+use App\Model\User;
+use App\SuperGlobals\Session;
 
 class AuthServiceProvider
 {
-    /**
-     * @return array<string, mixed>|null
-     */
-    public static function getUser(): ?array
+    public static function getUser(): ?User
     {
         if (self::isAuthenticated()) {
-            /** @var array<string, mixed> $user */
-            $user = Session::get('user');
-            return $user;
+            return Session::get('user') instanceof User ? Session::get('user') : null;
         }
 
         return null;
