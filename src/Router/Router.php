@@ -214,7 +214,8 @@ class Router
                     'myAccountPasswordUpdate'
                 ),
                 new Route('/user/{id}', 'GET', 'user', 'UserController', 'profile'),
-                new Route('/admin/users-manager', 'GET', 'UsersManager', 'UsersManagerController', 'index'),
+                new Route('/dashboard/users', 'GET', 'usersDashboard', 'UsersDashboardController', 'index'),
+                new Route('/dashboard/user/{id}/delete', 'GET', 'userDelete', 'UsersDashboardController', 'delete'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),

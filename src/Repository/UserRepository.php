@@ -14,9 +14,13 @@ use App\Services\Exception\RegisterException;
 use App\Services\Exception\UpdateIdentityException;
 use App\Services\Exception\UpdatePasswordException;
 use App\SuperGlobals\Session;
+use function array_key_exists;
 use function count;
+use function is_array;
+use function is_int;
 use function is_string;
 use const PASSWORD_DEFAULT;
+use PDO;
 use PDOException;
 
 class UserRepository extends AbstractRepository
@@ -28,14 +32,14 @@ class UserRepository extends AbstractRepository
         }
 
         $pdo = self::getPDO();
-        $sql = 'INSERT INTO users (firstName, lastName, email, password, isAuthor, isAdmin, createdAt, updatedAt) VALUES (:firstName, :lastName, :email, :password, :isAuthor, :isAdmin, :createdAt, :updatedAt);';
+        $sql = 'INSERT INTO users (firstName, lastName, email, password, isValidated, isAdmin, createdAt, updatedAt) VALUES (:firstName, :lastName, :email, :password, :isValidated, :isAdmin, :createdAt, :updatedAt);';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'firstName' => $register->firstName,
             'lastName' => $register->lastName,
             'email' => $register->email,
             'password' => password_hash($register->password, PASSWORD_DEFAULT),
-            'isAuthor' => 0,
+            'isValidated' => 0,
             'isAdmin' => 0,
             'createdAt' => time(),
             'updatedAt' => time(),
@@ -108,25 +112,35 @@ class UserRepository extends AbstractRepository
     public function getUser(string $field, string $value): User
     {
         $pdo = self::getPDO();
-        $sql = 'SELECT id, firstName, lastName, email, isAuthor, isAdmin, createdAt, updatedAt FROM users WHERE ' . $field . ' = :value LIMIT 1;';
+        $sql = 'SELECT id, firstName, lastName, email, isValidated, isAdmin, createdAt, updatedAt FROM users WHERE ' . $field . ' = :value LIMIT 1;';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'value' => $value,
         ]);
-
-        return $stmt->fetchObject(User::class);
+        $user = $stmt->fetchObject(User::class);
+        if ($user instanceof User) {
+            return $user;
+        }
+        throw new PDOException(
+            'Le résultat attendu doit être une instance de Model/User, mais ce n’est pas le cas.'
+        );
     }
 
     public function getUserWithPassword(string $field, string $value): User
     {
         $pdo = self::getPDO();
-        $sql = 'SELECT id, firstName, lastName, email, password, isAuthor, isAdmin, createdAt, updatedAt FROM users WHERE ' . $field . ' = :value LIMIT 1;';
+        $sql = 'SELECT id, firstName, lastName, email, password, isValidated, isAdmin, createdAt, updatedAt FROM users WHERE ' . $field . ' = :value LIMIT 1;';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'value' => $value,
         ]);
-
-        return $stmt->fetchObject(User::class);
+        $user = $stmt->fetchObject(User::class);
+        if ($user instanceof User) {
+            return $user;
+        }
+        throw new PDOException(
+            'Le résultat attendu doit être une instance de Model/User, mais ce n’est pas le cas.'
+        );
     }
 
     public function changePassword(UpdatePassword $updatePassword): void
@@ -146,5 +160,47 @@ class UserRepository extends AbstractRepository
         if ($stmt->rowCount() <= 0) {
             throw new UpdateIdentityException('Votre mot de passe n’a pas pu être mis à jour, veuillez réessayer');
         }
+    }
+
+    public function countUsers(): int
+    {
+        $pdo = self::getPDO();
+        $sql = 'SELECT COUNT(*) as nbrUsers FROM users;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        if (is_array($result) && array_key_exists('nbrUsers', $result) && is_int($result['nbrUsers'])) {
+            return $result['nbrUsers'];
+        }
+        throw new PDOException('Le résultat attendu n’est pas au bon format.');
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getPaginatedUsers(int $indexFirstUser, int $lenght): array
+    {
+        $pdo = self::getPDO();
+        $sql = 'SELECT id, firstName, lastName, email, isValidated, isAdmin FROM users LIMIT :indexFirstUser, :lenght;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'indexFirstUser' => $indexFirstUser,
+            'lenght' => $lenght,
+        ]);
+        /** @var User[] $users */
+        return $stmt->fetchAll(PDO::FETCH_CLASS, User::class);
+    }
+
+    public function delete(int $userId): bool
+    {
+        $pdo = self::getPDO();
+        $sql = 'DELETE FROM users WHERE id = :userId;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'userId' => $userId,
+        ]);
+
+        return $stmt->rowCount() >= 1;
     }
 }

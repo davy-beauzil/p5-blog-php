@@ -14,7 +14,7 @@ class User
 
     public string $email;
 
-    public bool $isAuthor;
+    public bool $isValidated;
 
     public bool $isAdmin;
 
