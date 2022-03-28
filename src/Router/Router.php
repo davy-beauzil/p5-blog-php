@@ -185,7 +185,7 @@ class Router
                         $url = $url . '/' . $value;
                     }
                 }
-                if(count($parameters) > 0){
+                if (count($parameters) > 0) {
                     $url .= '?' . http_build_query($parameters);
                 }
                 break;
@@ -209,28 +209,52 @@ class Router
                 new Route('/logout', 'GET', 'logout', 'LogoutController', 'logout'),
                 new Route('/register', 'GET', 'registerIndex', 'RegisterController', 'registerIndex'),
 
-                new Route('/my-account', 'GET', 'myAccount', 'UserController', 'myAccount'),
+                new Route('/my-account', 'GET', 'myAccount', 'MyAccountController', 'myAccount'),
                 new Route(
                     '/my-account/update/password',
                     'GET',
                     'myAccountPasswordUpdate',
-                    'UserController',
+                    'MyAccountController',
                     'myAccountPasswordUpdate'
                 ),
 
-                new Route('/dashboard/users', 'GET', 'usersDashboard', 'UsersDashboardController', 'index'),
-                new Route('/dashboard/user/{id}/delete', 'GET', 'userDelete', 'UsersDashboardController', 'delete'),
-                new Route('/dashboard/user/{id}/update', 'GET', 'userUpdateIndex', 'UsersDashboardController', 'updateIndex'),
-                new Route('/dashboard/user/{id}', 'GET', 'user', 'UsersDashboardController', 'user'),
+                new Route('/dashboard/users', 'GET', 'adminUsers', 'UsersDashboardController', 'index'),
+                new Route(
+                    '/dashboard/user/{id}/delete',
+                    'GET',
+                    'adminUserDelete',
+                    'UsersDashboardController',
+                    'delete'
+                ),
+                new Route(
+                    '/dashboard/user/{id}/update',
+                    'GET',
+                    'adminUserUpdateIndex',
+                    'UsersDashboardController',
+                    'updateIndex'
+                ),
+                new Route('/user/{id}', 'GET', 'user', 'UserController', 'user'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
                 new Route('/register', 'POST', 'register', 'RegisterController', 'register'),
             ],
             'PUT', 'put' => [
-                new Route('/my-account/update', 'PUT', 'updateIdentity', 'UserController', 'updateIdentity'),
-                new Route('/my-account/update/password', 'PUT', 'updatePassword', 'UserController', 'updatePassword'),
-                new Route('/dashboard/user/{id}/update', 'PUT', 'userUpdate', 'UsersDashboardController', 'update'),
+                new Route('/my-account/update', 'PUT', 'updateIdentity', 'MyAccountController', 'updateIdentity'),
+                new Route(
+                    '/my-account/update/password',
+                    'PUT',
+                    'updatePassword',
+                    'MyAccountController',
+                    'updatePassword'
+                ),
+                new Route(
+                    '/dashboard/user/{id}/update',
+                    'PUT',
+                    'adminUserUpdate',
+                    'UsersDashboardController',
+                    'update'
+                ),
             ],
             default => [],
         };

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto;
 
 class UpdateUser
@@ -10,5 +12,6 @@ class UpdateUser
         public string $lastName,
         public string $email,
         public string $isValidated,
-    ){}
+    ) {
+    }
 }

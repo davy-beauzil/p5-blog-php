@@ -123,9 +123,7 @@ class UserRepository extends AbstractRepository
         if ($user instanceof User) {
             return $user;
         }
-        throw new PDOException(
-            'Le résultat attendu doit être une instance de Model/User, mais ce n’est pas le cas.'
-        );
+        throw new PDOException('Une erreur s’est produite lors de la récupération de l’utilisateur');
     }
 
     public function getUserWithPassword(string $field, string $value): User
@@ -190,8 +188,9 @@ class UserRepository extends AbstractRepository
             'indexFirstUser' => $indexFirstUser,
             'lenght' => $lenght,
         ]);
-        /** @var User[] $users */
-        return $stmt->fetchAll(PDO::FETCH_CLASS, User::class);
+        /** @var User[] $users */ /** @codingStandardsIgnoreLine */
+        return $stmt->fetchAll(PDO::FETCH_CLASS, User::class); // @codingStandardsIgnoreLine
+          // @codingStandardsIgnoreLine
     }
 
     public function delete(int $userId): bool
@@ -206,7 +205,7 @@ class UserRepository extends AbstractRepository
         return $stmt->rowCount() >= 1;
     }
 
-    public function updateUserFromDashboard(UpdateUser $updateUser)
+    public function updateUserFromDashboard(UpdateUser $updateUser): void
     {
         $pdo = self::getPDO();
         $sql = 'UPDATE users SET firstName = :firstName, lastName = :lastName, email = :email, isValidated = :isValidated, updatedAt = :updatedAt WHERE id = :id';
@@ -220,9 +219,8 @@ class UserRepository extends AbstractRepository
             'id' => $updateUser->id,
         ]);
 
-        if($stmt->rowCount() < 1){
+        if ($stmt->rowCount() < 1) {
             throw new UpdateUserException('L’utilisateur n’a pas pu être modifié pour une raison inconnue');
         }
-
     }
 }

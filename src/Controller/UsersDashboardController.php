@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Dto\MyAccount\UpdateMyAccountIdentity;
 use App\Dto\UpdateUser;
 use App\Repository\UserRepository;
 use App\Router\Parameters;
@@ -13,13 +12,17 @@ use App\Services\Exception\UpdateUserException;
 use App\Services\Validator\UpdateUserValidator;
 use App\Services\Voters\IsAdminVoter;
 use App\Services\Voters\Voters;
+use function is_string;
+use PDOException;
 
 class UsersDashboardController extends AbstractController
 {
     public const NBR_USERS_PER_PAGE = 25;
 
     private Voters $voters;
+
     private UserRepository $userRepository;
+
     private UpdateUserValidator $updateUserValidator;
 
     public function __construct()
@@ -35,6 +38,7 @@ class UsersDashboardController extends AbstractController
             $this->redirectToRoute('homepage');
         }
 
+        /** @var ?string $page */
         $page = $parameters->get['page'] ?? null;
         $page = ctype_digit($page) ? (int) $page : 1;
         $page = $page <= 0 ? 1 : $page;
@@ -55,11 +59,12 @@ class UsersDashboardController extends AbstractController
         if (! $this->voters->vote(IsAdminVoter::IS_ADMIN)) {
             $this->redirectToRoute('homepage');
         }
+        /** @var ?string $userId */
         $userId = $parameters->get['id'] ?? null;
         if (ctype_digit($userId)) {
             $this->userRepository->delete((int) $userId);
         }
-        $this->redirectToRoute('usersDashboard');
+        $this->redirectToRoute('adminUsers');
     }
 
     public function updateIndex(Parameters $parameters): void
@@ -68,20 +73,21 @@ class UsersDashboardController extends AbstractController
             $this->redirectToRoute('homepage');
         }
 
+        /** @var ?string $userId */
         $userId = $parameters->get['id'] ?? null;
-        if(!ctype_digit($userId)){
+        if (! ctype_digit($userId)) {
             $this->redirectToRoute('homepage');
         }
 
-        $user = $this->userRepository->getUser('id', $userId);
+        $user = $this->userRepository->getUser('id', (string) $userId);
         $this->render('dashboard/admin/user-update', [
             'user' => $user,
-            'csrf' => CsrfServiceProvider::generate('update-user')
+            'csrf' => CsrfServiceProvider::generate('update-user'),
         ]);
     }
 
     /**
-     * Modification du compte courant (nom & prénom).
+     * Modification d'un compte.
      */
     public function update(Parameters $parameters): void
     {
@@ -92,16 +98,46 @@ class UsersDashboardController extends AbstractController
         try {
             $updateUser = $this->checkUpdate($parameters);
             $this->userRepository->updateUserFromDashboard($updateUser);
-            $this->redirectToRoute('usersDashboard', ['success' => 'Le compte a bien été mis à jour']);
+            $this->redirectToRoute('adminUsers', [
+                'success' => 'Le compte a bien été mis à jour',
+            ]);
         } catch (UpdateUserException $e) {
-            $this->redirectToRoute('usersDashboard', ['error' => $e->getMessage()]);
+            $this->redirectToRoute('adminUsers', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function user(Parameters $parameters): void
+    {
+        if (! $this->voters->vote(IsAdminVoter::IS_ADMIN)) {
+            $this->redirectToRoute('homepage');
+        }
+        /** @var ?string $userId */
+        $userId = $parameters->get['id'];
+        if ($userId === null) {
+            $this->redirectToRoute('adminUsers', [
+                'error' => 'Le compte de l’utilisateur n’a pas été trouvé',
+            ]);
+        }
+        try {
+            $user = $this->userRepository->getUser('id', (string) $userId);
+            $this->render('dashboard/user', [
+                'user' => $user,
+            ]);
+        } catch (PDOException) {
+            $this->redirectToRoute('adminUsers', [
+                'error' => 'Le compte de l’utilisateur n’a pas été trouvé',
+            ]);
         }
     }
 
     private function checkUpdate(Parameters $parameters): UpdateUser
     {
         if (! $parameters->has(Parameters::PUT, 'id', 'firstName', 'lastName', 'email', 'isValidated', '_csrf')) {
-            throw new UpdateUserException('Un des champs id, firstName, lastName, email, isValidated ou _csrf est manquant.');
+            throw new UpdateUserException(
+                'Un des champs id, firstName, lastName, email, isValidated ou _csrf est manquant.'
+            );
         }
         if (! is_string($parameters->put['_csrf'])) {
             throw new UpdateUserException('Une erreur est survenue lors de votre inscription, veuillez réessayer');
@@ -113,20 +149,5 @@ class UsersDashboardController extends AbstractController
         }
 
         return $updateUser;
-    }
-
-    public function user(Parameters $parameters): void
-    {
-        if (! $this->voters->vote(IsAdminVoter::IS_ADMIN)) {
-            $this->redirectToRoute('homepage');
-        }
-        $userId = $parameters->get['id'];
-        if($userId === null){
-            $this->redirectToRoute('homepage');
-        }
-        $user = $this->userRepository->getUser('id', $userId);
-        $this->render('dashboard/user', [
-            'user' => $user
-        ]);
     }
 }
