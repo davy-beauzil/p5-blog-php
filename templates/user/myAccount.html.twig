@@ -12,16 +12,17 @@
                     {{ app.user.firstName }} {{ app.user.lastName }} <br>
                     {{ app.user.email }} <br>
 
+                    Compte créé le : {{ app.user.createdAt|date('d/m/Y H:i')}} <br>
+
                     {% if app.user.isValidated == true %}
-                    Autheur : oui
+                        <span class="badge bg-success">Compte validé</span> <br>
+                    {% else %}
+                        <span class="badge bg-danger">Compte non validé</span> <br>
                     {% endif %}
 
                     {% if app.user.isAdmin == true %}
-                    Administrateur : oui
+                    <span class="badge bg-success">Administrateur</span> <br>
                     {% endif %}
-
-                        Compte créé le : {{ app.user.createdAt|date('d/m/Y H:i')}} <br>
-                        Compte modifié le : {{ app.user.updatedAt|date('d/m/Y H:i')}}
                 </p>
             </div>
 
