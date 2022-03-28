@@ -8,11 +8,13 @@ use App\Dto\Login;
 use App\Dto\MyAccount\UpdateMyAccountIdentity;
 use App\Dto\MyAccount\UpdatePassword;
 use App\Dto\Register;
+use App\Dto\UpdateUser;
 use App\Model\User;
 use App\Services\Exception\LoginException;
 use App\Services\Exception\RegisterException;
 use App\Services\Exception\UpdateIdentityException;
 use App\Services\Exception\UpdatePasswordException;
+use App\Services\Exception\UpdateUserException;
 use App\SuperGlobals\Session;
 use function array_key_exists;
 use function count;
@@ -202,5 +204,25 @@ class UserRepository extends AbstractRepository
         ]);
 
         return $stmt->rowCount() >= 1;
+    }
+
+    public function updateUserFromDashboard(UpdateUser $updateUser)
+    {
+        $pdo = self::getPDO();
+        $sql = 'UPDATE users SET firstName = :firstName, lastName = :lastName, email = :email, isValidated = :isValidated, updatedAt = :updatedAt WHERE id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'firstName' => $updateUser->firstName,
+            'lastName' => $updateUser->lastName,
+            'email' => $updateUser->email,
+            'isValidated' => $updateUser->isValidated === 'on' ? '1' : '0',
+            'updatedAt' => time(),
+            'id' => $updateUser->id,
+        ]);
+
+        if($stmt->rowCount() < 1){
+            throw new UpdateUserException('L’utilisateur n’a pas pu être modifié pour une raison inconnue');
+        }
+
     }
 }

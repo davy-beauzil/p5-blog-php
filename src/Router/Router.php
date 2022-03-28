@@ -180,9 +180,13 @@ class Router
                             ));
                         }
                         $url = $url . '/' . $parameters[$parameterId];
+                        unset($parameters[$parameterId]); // ajouté
                     } else {
                         $url = $url . '/' . $value;
                     }
+                }
+                if(count($parameters) > 0){
+                    $url .= '?' . http_build_query($parameters);
                 }
                 break;
             }
@@ -213,9 +217,11 @@ class Router
                     'UserController',
                     'myAccountPasswordUpdate'
                 ),
-                new Route('/user/{id}', 'GET', 'user', 'UserController', 'profile'),
+
                 new Route('/dashboard/users', 'GET', 'usersDashboard', 'UsersDashboardController', 'index'),
                 new Route('/dashboard/user/{id}/delete', 'GET', 'userDelete', 'UsersDashboardController', 'delete'),
+                new Route('/dashboard/user/{id}/update', 'GET', 'userUpdateIndex', 'UsersDashboardController', 'updateIndex'),
+                new Route('/dashboard/user/{id}', 'GET', 'user', 'UsersDashboardController', 'user'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
@@ -224,6 +230,7 @@ class Router
             'PUT', 'put' => [
                 new Route('/my-account/update', 'PUT', 'updateIdentity', 'UserController', 'updateIdentity'),
                 new Route('/my-account/update/password', 'PUT', 'updatePassword', 'UserController', 'updatePassword'),
+                new Route('/dashboard/user/{id}/update', 'PUT', 'userUpdate', 'UsersDashboardController', 'update'),
             ],
             default => [],
         };

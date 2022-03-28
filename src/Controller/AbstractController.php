@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Router\Router;
 use App\Services\CsrfServiceProvider;
+use App\SuperGlobals\Get;
 use App\SuperGlobals\Session;
 use Exception;
 use Twig\Environment;
@@ -40,10 +41,9 @@ class AbstractController
         }
 
         // on récupère l'utilisateur courant pour le rendre accessible globalement depuis twig
-        $user = Session::get('user');
-        if ($user !== null) {
-            $parameters['user'] = $user;
-        }
+        $parameters['app']['user'] = Session::get('user');
+        $parameters['app']['error'] = Get::get('error');
+        $parameters['app']['success'] = Get::get('success');
 
         $twig = new Environment($loader, []);
         $template = $twig->load($view . '.html.twig');
