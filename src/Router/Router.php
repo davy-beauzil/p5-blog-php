@@ -233,6 +233,9 @@ class Router
                     'UsersDashboardController',
                     'updateIndex'
                 ),
+
+                new Route('/dashboard/articles', 'GET', 'adminArticles', 'ArticlesDashboardController', 'index'),
+
                 new Route('/user/{id}', 'GET', 'user', 'UserController', 'user'),
             ],
             'POST', 'post' => [

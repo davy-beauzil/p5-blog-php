@@ -188,7 +188,7 @@ class UserRepository extends AbstractRepository
             'indexFirstUser' => $indexFirstUser,
             'lenght' => $lenght,
         ]);
-        /** @var User[] $users */ /** @codingStandardsIgnoreLine */
+        /** @var User[] $users */ /* @codingStandardsIgnoreLine */
         return $stmt->fetchAll(PDO::FETCH_CLASS, User::class); // @codingStandardsIgnoreLine
           // @codingStandardsIgnoreLine
     }

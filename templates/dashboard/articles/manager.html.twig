@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DevBlog | Gestion des utilisateurs{% endblock %}
+
+{% block main_content %}
+    <div class="container mt-5">
+        <div class="row justify-content-between">
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-header-title me-auto">
+                        Gestion des articles
+                    </h4>
+
+                    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+                        <li class="nav-item">
+                            <a href="/dashboard/users" class="nav-link">Utilisateurs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#!" class="nav-link active">Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#!" class="nav-link disabled">Commentaires</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#!" class="nav-link disabled">Contacts</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+
+            {# Modal de suppression #}
+            <div class="modal fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Supprimer un utilisateur</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Supprimer le compte de <span class="modal__text__name"></span></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <a type="button" class="btn btn-danger btn__user__delete">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{#{% block javascripts  %}#}
+{#    {{ parent() }}#}
+{#    <script>#}
+
+{#        // Modification et ouverture de la modal#}
+{#        modal = document.querySelector('.modal');#}
+{#        deleteButtons = document.querySelectorAll('.delete-button');#}
+{#        deleteButtons.forEach((e) => {#}
+{#            e.addEventListener('click', () => {#}
+{#                id = e.getAttribute('user-id')#}
+{#                firstName = e.getAttribute('user-first-name')#}
+{#                lastName = e.getAttribute('user-last-name')#}
+
+{#                deleteUserButton = document.querySelector('.btn__user__delete');#}
+{#                deleteUserButton.setAttribute('href', '/dashboard/user/' + id + '/delete')#}
+
+{#                text = modal.querySelector('.modal__text__name');#}
+{#                text.innerHTML = firstName + ' ' + lastName;#}
+{#                modal.style.display = 'block'#}
+{#                modal.classList.add('show');#}
+{#            })#}
+{#        })#}
+
+{#        // Fermuture de la modal#}
+{#        closeModal = document.querySelectorAll("[data-bs-dismiss=modal]");#}
+{#        closeModal.forEach((e) => {#}
+{#            e.addEventListener('click', () => {#}
+{#                console.log('On ferme la modal')#}
+{#                modal.style.display = 'none'#}
+{#                modal.classList.remove('show');#}
+{#            })#}
+{#        })#}
+{#    </script>#}
+{#{% endblock %}#}

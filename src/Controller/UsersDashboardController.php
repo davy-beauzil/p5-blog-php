@@ -47,7 +47,7 @@ class UsersDashboardController extends AbstractController
         $pages = ceil($nbrUsers / self::NBR_USERS_PER_PAGE);
         $firstUser = ($page - 1) * self::NBR_USERS_PER_PAGE;
         $users = $this->userRepository->getPaginatedUsers($firstUser, self::NBR_USERS_PER_PAGE);
-        $this->render('dashboard/admin/users-manager', [
+        $this->render('dashboard/users/manager', [
             'users' => $users,
             'pages' => $pages,
             'currentPage' => $page,
@@ -80,7 +80,7 @@ class UsersDashboardController extends AbstractController
         }
 
         $user = $this->userRepository->getUser('id', (string) $userId);
-        $this->render('dashboard/admin/user-update', [
+        $this->render('dashboard/users/update', [
             'user' => $user,
             'csrf' => CsrfServiceProvider::generate('update-user'),
         ]);
