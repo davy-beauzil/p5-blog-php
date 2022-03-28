@@ -20,4 +20,30 @@
         </div>
         {% endif %}
     {% endfor %}
+
+    {% if app.error %}
+        <div role="alert" aria-live="assertive" aria-atomic="true" class="toast show" data-bs-autohide="false">
+            <div class="toast-header">
+                <strong class="me-auto text-danger">Erreur</strong>
+                <small>À l'instant</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ app.error }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if app.success %}
+        <div role="alert" aria-live="assertive" aria-atomic="true" class="toast show" data-bs-autohide="false">
+            <div class="toast-header">
+                <strong class="me-auto text-success">Succès</strong>
+                <small>À l'instant</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ app.success }}
+            </div>
+        </div>
+    {% endif %}
 </div>

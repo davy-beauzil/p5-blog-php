@@ -39,12 +39,9 @@ class AbstractController
             ));
         }
 
-        // on récupère l'utilisateur courant pour le rendre accessible globalement depuis twig
-        $user = Session::get('user');
-        if ($user !== null) {
-            $parameters['user'] = $user;
-        }
-
+        $parameters['app']['user'] = Session::get('user'); /* @phpstan-ignore-line */
+        $parameters['app']['error'] = Session::get('error'); /* @phpstan-ignore-line */
+        $parameters['app']['success'] = Session::get('success'); /** @phpstan-ignore-line */
         $twig = new Environment($loader, []);
         $template = $twig->load($view . '.html.twig');
         $template->display($parameters);

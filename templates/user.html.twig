@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DevBlog | Gestion des utilisateurs{% endblock %}
+
+{% block main_content %}
+    <div class="container mt-5">
+        <div class="row justify-content-between">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-end">
+                        <h2 class="header-title">
+                            {{ user.firstName }} {{ user.lastName }}
+                        </h2>
+                        <h6 class="header-pretitle">
+                            {% if user.isAdmin %}
+                                Administrateur
+                            {% elseif user.isValidated %}
+                                Membre vérifié
+                            {% else %}
+                                Membre
+                            {% endif %}
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    Bientôt, le contenu sera visible (articles, commentaires, ...)
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

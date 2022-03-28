@@ -29,7 +29,7 @@ class users {
     lastname : string
     email : string
     password : string
-    isAuthor : bool
+    isValidated : bool
     isAdmin : bool
     created_at : datetime
     updated_at : datetime

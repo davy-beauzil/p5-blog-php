@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}DevBlog | {{ user.firstName }} {{ user.lastName }}{% endblock %}
+{% block title %}DevBlog | {{ app.user.firstName }} {{ app.user.lastName }}{% endblock %}
 
 {% block main_content %}
     <div class="container mt-5">
@@ -9,19 +9,20 @@
                 <h2>Vos informations</h2>
                 <hr class="my-2">
                 <p>
-                    {{ user.firstName }} {{ user.lastName }} <br>
-                    {{ user.email }} <br>
+                    {{ app.user.firstName }} {{ app.user.lastName }} <br>
+                    {{ app.user.email }} <br>
 
-                    {% if user.isAuthor == true %}
-                    Autheur : oui
+                    Compte créé le : {{ app.user.createdAt|date('d/m/Y H:i')}} <br>
+
+                    {% if app.user.isValidated == true %}
+                        <span class="badge bg-success">Compte validé</span> <br>
+                    {% else %}
+                        <span class="badge bg-danger">Compte non validé</span> <br>
                     {% endif %}
 
-                    {% if user.isAdmin == true %}
-                    Administrateur : oui
+                    {% if app.user.isAdmin == true %}
+                    <span class="badge bg-success">Administrateur</span> <br>
                     {% endif %}
-
-                        Compte créé le : {{ user.createdAt|date('d/m/Y H:i')}} <br>
-                        Compte modifié le : {{ user.updatedAt|date('d/m/Y H:i')}}
                 </p>
             </div>
 
@@ -35,7 +36,7 @@
                         <label class="form-label">
                             Prénom
                         </label>
-                        <input type="text" name="firstName" id="firstName" class="form-control {% if errors.firstName %}is-invalid{% endif %}" placeholder="Joe" {% if user.firstName%}value="{{ user.firstName }}"{% endif%} required>
+                        <input type="text" name="firstName" id="firstName" class="form-control {% if errors.firstName %}is-invalid{% endif %}" placeholder="Joe" {% if app.user.firstName%}value="{{ app.user.firstName }}"{% endif%} required>
                         {% if errors.firstName %}
                             <div id="firstName_error" class="invalid-feedback">
                                 {{ errors.firstName }}
@@ -47,7 +48,7 @@
                         <label class="form-label">
                             Nom
                         </label>
-                        <input type="text" name="lastName" id="lastName" class="form-control {% if errors.lastName %}is-invalid{% endif %}" placeholder="Williams" {% if user.lastName%}value="{{ user.lastName }}"{% endif%} required>
+                        <input type="text" name="lastName" id="lastName" class="form-control {% if errors.lastName %}is-invalid{% endif %}" placeholder="Williams" {% if app.user.lastName%}value="{{ app.user.lastName }}"{% endif%} required>
                         {% if errors.lastName %}
                             <div id="lastName_error" class="invalid-feedback">
                                 {{ errors.lastName }}
@@ -55,8 +56,8 @@
                         {% endif %}
                     </div>
 
-                    {% if user.id %}
-                        <input type="hidden" name="id" value="{{ user.id }}">
+                    {% if app.user.id %}
+                        <input type="hidden" name="id" value="{{ app.user.id }}">
                     {% endif %}
                     {% if csrf_identity %}
                         <input type="hidden" name="_csrf" value="{{ csrf_identity }}">
@@ -92,8 +93,8 @@
                         <input type="password" name="confirmationNewPassword" id="confirmationNewPassword" class="form-control" required>
                     </div>
 
-                    {% if user.id %}
-                        <input type="hidden" name="id" value="{{ user.id }}">
+                    {% if app.user.id %}
+                        <input type="hidden" name="id" value="{{ app.user.id }}">
                     {% endif %}
                     {% if csrf_password %}
                         <input type="hidden" name="_csrf" value="{{ csrf_password }}">

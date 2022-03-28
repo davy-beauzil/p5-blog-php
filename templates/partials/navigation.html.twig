@@ -13,7 +13,7 @@
                     <a class="nav-link disabled">Contact</a>
                 </li>
             </ul>
-                {% if user %}
+                {% if app.user %}
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -21,6 +21,9 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/my-account">Mon profil</a></li>
+                                {% if app.user.isAdmin == true %}
+                                <li><a class="dropdown-item" href="/dashboard/users">Administration</a></li>
+                                {% endif %}
                                 <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
                             </ul>
                         </li>

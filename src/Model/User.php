@@ -16,7 +16,7 @@ class User
 
     public ?string $password = null;
 
-    public ?bool $isAuthor = null;
+    public ?bool $isValidated = null;
 
     public ?bool $isAdmin = null;
 

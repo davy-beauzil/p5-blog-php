@@ -30,5 +30,6 @@ class Voters
     {
         $this->voters[] = new IsLoggedInVoter();
         $this->voters[] = new IsCurrentUserVoter();
+        $this->voters[] = new IsAdminVoter();
     }
 }
