@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Router\Router;
 use App\Services\CsrfServiceProvider;
+use App\SuperGlobals\Get;
 use App\SuperGlobals\Session;
 use Exception;
 use Twig\Environment;
@@ -40,8 +41,8 @@ class AbstractController
         }
 
         $parameters['app']['user'] = Session::get('user'); /* @phpstan-ignore-line */
-        $parameters['app']['error'] = Session::get('error'); /* @phpstan-ignore-line */
-        $parameters['app']['success'] = Session::get('success'); /** @phpstan-ignore-line */
+        $parameters['app']['error'] = Get::get('error'); /* @phpstan-ignore-line */
+        $parameters['app']['success'] = Get::get('success'); /** @phpstan-ignore-line */
         $twig = new Environment($loader, []);
         $template = $twig->load($view . '.html.twig');
         $template->display($parameters);

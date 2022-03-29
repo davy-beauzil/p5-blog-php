@@ -188,9 +188,13 @@ class UserRepository extends AbstractRepository
             'indexFirstUser' => $indexFirstUser,
             'lenght' => $lenght,
         ]);
-        /** @var User[] $users */ /* @codingStandardsIgnoreLine */
-        return $stmt->fetchAll(PDO::FETCH_CLASS, User::class); // @codingStandardsIgnoreLine
-          // @codingStandardsIgnoreLine
+        $users = $stmt->fetchAll(PDO::FETCH_CLASS, User::class);
+        if (is_array($users) && count(array_filter($users, function ($user) {
+            return ! ($user instanceof User);
+        })) === 0) {
+            return $users;
+        }
+        throw new PDOException('Une erreur s’est produite lors de la récupération des articles');
     }
 
     public function delete(int $userId): bool

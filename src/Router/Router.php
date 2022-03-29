@@ -235,12 +235,33 @@ class Router
                 ),
 
                 new Route('/dashboard/articles', 'GET', 'adminArticles', 'ArticlesDashboardController', 'index'),
+                new Route(
+                    '/dashboard/article/create',
+                    'GET',
+                    'createArticle',
+                    'ArticlesDashboardController',
+                    'createIndex'
+                ),
+                new Route(
+                    '/dashboard/article/{id}/delete',
+                    'GET',
+                    'deleteArticle',
+                    'ArticlesDashboardController',
+                    'delete'
+                ),
 
                 new Route('/user/{id}', 'GET', 'user', 'UserController', 'user'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
                 new Route('/register', 'POST', 'register', 'RegisterController', 'register'),
+                new Route(
+                    '/dashboard/article/create',
+                    'POST',
+                    'createArticle',
+                    'ArticlesDashboardController',
+                    'create'
+                ),
             ],
             'PUT', 'put' => [
                 new Route('/my-account/update', 'PUT', 'updateIdentity', 'MyAccountController', 'updateIdentity'),

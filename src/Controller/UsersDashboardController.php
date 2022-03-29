@@ -42,7 +42,6 @@ class UsersDashboardController extends AbstractController
         $page = $parameters->get['page'] ?? null;
         $page = ctype_digit($page) ? (int) $page : 1;
         $page = $page <= 0 ? 1 : $page;
-
         $nbrUsers = $this->userRepository->countUsers();
         $pages = ceil($nbrUsers / self::NBR_USERS_PER_PAGE);
         $firstUser = ($page - 1) * self::NBR_USERS_PER_PAGE;
