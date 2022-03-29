@@ -9,46 +9,35 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-header-title me-auto">
-                        Création d'un nouvel article
+                        {% if article %} Modification {% else %} Création {% endif %} d'un article
                     </h4>
                 </div>
                 <div class="card-body">
-                    <form action="/dashboard/article/create" method="post">
+                    <form action="/dashboard/article/{% if article %}{{ article.id }}/update{% else %}/create{% endif %}" method="post">
+                        {% if article %}
+                        <input type="hidden" name="_method" value="put">
+                        <input type="hidden" name="id" value="{{ article.id }}">
+                        {% endif %}
                         <label class="mt-4 form-label" for="content">
                             Titre
                         </label>
-                        <input type="text" name="title" id="title" class="form-control {% if errors.title %}is-invalid{% endif %}" required>
-                        {% if errors.title %}
-                            <div id="title_error" class="invalid-feedback">
-                                {{ errors.title }}
-                            </div>
-                        {% endif %}
+                        <input maxlength="255" type="text" name="title" id="title" class="form-control" {% if article.title %} value="{{ article.title }}"{% endif %} required>
 
                         <label class="mt-4 form-label" for="content">
                             Contenu
                         </label>
-                        <textarea name="content" id="content" class="form-control {% if errors.content %}is-invalid{% endif %}" style="height: 500px;" required></textarea>
-                        {% if errors.content %}
-                            <div id="content_error" class="invalid-feedback">
-                                {{ errors.content }}
-                            </div>
-                        {% endif %}
+                        <textarea name="content" id="content" class="form-control" style="height: 500px;" required>{% if article.content %} {{ article.content }} {% endif %}</textarea>
 
                         <label class="mt-4 form-label" for="excerpt">
                             Chapô
                         </label>
-                        <textarea maxlength="255" name="excerpt" id="excerpt" class="form-control {% if errors.excerpt %}is-invalid{% endif %}" required></textarea>
-                        {% if errors.excerpt %}
-                            <div id="excerpt_error" class="invalid-feedback">
-                                {{ errors.excerpt }}
-                            </div>
-                        {% endif %}
+                        <textarea maxlength="255" name="excerpt" id="excerpt" class="form-control" required>{% if article.excerpt %} {{ article.excerpt }} {% endif %}</textarea>
 
                         {% if csrf %}
                             <input type="hidden" name="_csrf" value="{{ csrf }}">
                         {% endif %}
 
-                        <input type="submit" class="mt-4 btn btn-lg w-100 btn-primary mb-3" value="Créer">
+                        <input type="submit" class="mt-4 btn btn-lg w-100 btn-primary mb-3" value="{% if article %} Modifier {% else %} Créer {% endif %}">
                     </form>
                 </div>
             </div>

@@ -249,6 +249,14 @@ class Router
                     'ArticlesDashboardController',
                     'delete'
                 ),
+                new Route(
+                    '/dashboard/article/{id}/update',
+                    'GET',
+                    'updateArticle',
+                    'ArticlesDashboardController',
+                    'updateIndex'
+                ),
+                new Route('/article/{id}', 'GET', 'article', 'ArticleController', 'article'),
 
                 new Route('/user/{id}', 'GET', 'user', 'UserController', 'user'),
             ],
@@ -277,6 +285,13 @@ class Router
                     'PUT',
                     'adminUserUpdate',
                     'UsersDashboardController',
+                    'update'
+                ),
+                new Route(
+                    '/dashboard/article/{id}/update',
+                    'PUT',
+                    'updateArticle',
+                    'ArticlesDashboardController',
                     'update'
                 ),
             ],

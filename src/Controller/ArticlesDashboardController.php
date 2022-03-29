@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\Article\Article;
+use App\Model\Article as ArticleModel;
 use App\Repository\ArticleRepository;
 use App\Router\Parameters;
 use App\Services\CsrfServiceProvider;
 use App\Services\Exception\CreateArticleException;
+use App\Services\Exception\UpdateArticleException;
 use App\Services\Validator\CreateArticleValidator;
+use App\Services\Validator\UpdateArticleValidator;
 use App\Services\Voters\IsAdminVoter;
 use App\Services\Voters\Voters;
 use function is_string;
@@ -25,11 +28,14 @@ class ArticlesDashboardController extends AbstractController
 
     private CreateArticleValidator $createArticleValidator;
 
+    private UpdateArticleValidator $updateArticleValidator;
+
     public function __construct()
     {
         $this->voters = new Voters();
         $this->repository = new ArticleRepository();
         $this->createArticleValidator = new createArticleValidator();
+        $this->updateArticleValidator = new UpdateArticleValidator();
     }
 
     public function index(Parameters $parameters): void
@@ -81,7 +87,9 @@ class ArticlesDashboardController extends AbstractController
         try {
             $createArticle = $this->checkCreate($parameters);
             $this->repository->create($createArticle);
-            $this->redirectToRoute('adminArticles');
+            $this->redirectToRoute('adminArticles', [
+                'success' => 'Votre article a bien été créé.',
+            ]);
         } catch (CreateArticleException $e) {
             $this->redirectToRoute('createArticle', [
                 'error' => $e->getMessage(),
@@ -116,6 +124,55 @@ class ArticlesDashboardController extends AbstractController
         }
     }
 
+    public function updateIndex(Parameters $parameters): void
+    {
+        if (! $this->voters->vote(IsAdminVoter::IS_ADMIN)) {
+            $this->redirectToRoute('homepage');
+        }
+        $id = $parameters->get['id'];
+        if (! is_string($id)) {
+            $this->redirectToRoute('adminArticles', [
+                'error' => 'Impossible de retrouver l’article en question',
+            ]);
+        } else {
+            try {
+                $article = $this->repository->getArticle($id);
+                $this->render('dashboard/articles/create', [
+                    'article' => $article,
+                    'csrf' => CsrfServiceProvider::generate('update-article'),
+                ]);
+            } catch (PDOException) {
+                $this->redirectToRoute('adminArticles', [
+                    'error' => 'Impossible de retrouver l’article en question',
+                ]);
+            }
+        }
+    }
+
+    public function update(Parameters $parameters): void
+    {
+        if (! $this->voters->vote(IsAdminVoter::IS_ADMIN)) {
+            $this->redirectToRoute('adminArticles');
+        }
+        $id = $parameters->get['id'];
+        if ($id === null) {
+            $this->redirectToRoute('adminArticles', [
+                'error' => 'Impossible de retrouver l’article en question',
+            ]);
+        }
+        try {
+            $article = $this->checkUpdate($parameters);
+            $this->repository->update($article);
+            $this->redirectToRoute('adminArticles', [
+                'success' => 'L’article a bien été modifié',
+            ]);
+        } catch (UpdateArticleException $e) {
+            $this->redirectToRoute('adminArticles', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
     private function checkCreate(Parameters $parameters): Article
     {
         if (! $parameters->has(Parameters::POST, 'title', 'excerpt', 'content', '_csrf')) {
@@ -135,5 +192,22 @@ class ArticlesDashboardController extends AbstractController
         }
 
         return $updateUser;
+    }
+
+    private function checkUpdate(Parameters $parameters): ArticleModel
+    {
+        if (! $parameters->has(Parameters::PUT, 'title', 'content', 'excerpt', '_csrf')) {
+            throw new UpdateArticleException('Un des champs est manquant pour modifier l’article');
+        }
+        if (! is_string($parameters->put['_csrf'])) {
+            throw new UpdateArticleException('Le formulaire est invalide.');
+        }
+        $updateArticle = $this->updateArticleValidator->validate($parameters);
+        $checkCsrf = CsrfServiceProvider::validate('update-article', $parameters->put['_csrf']);
+        if ($checkCsrf === false) {
+            throw new UpdateArticleException('Le CSRF n’est pas valide');
+        }
+
+        return $updateArticle;
     }
 }

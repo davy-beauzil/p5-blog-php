@@ -117,4 +117,22 @@ class ArticleRepository extends AbstractRepository
             throw new CreateArticleException('Une erreur s’est produite lors de la suppression de l’article');
         }
     }
+
+    public function update(Article $article): void
+    {
+        $pdo = self::getPDO();
+        $sql = 'UPDATE article SET title = :title, excerpt = :excerpt, content = :content, updatedAt = :updatedAt WHERE id = :id;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'title' => $article->title,
+            'excerpt' => $article->excerpt,
+            'content' => $article->content,
+            'updatedAt' => time(),
+            'id' => $article->id,
+        ]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new CreateArticleException('Une erreur s’est produite lors de la suppression de l’article');
+        }
+    }
 }
