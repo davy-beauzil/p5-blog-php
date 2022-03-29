@@ -13,7 +13,7 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <form action="/dashboard/article/{% if article %}{{ article.id }}/update{% else %}/create{% endif %}" method="post">
+                    <form action="/dashboard/article/{% if article %}{{ article.id }}/update{% else %}create{% endif %}" method="post">
                         {% if article %}
                         <input type="hidden" name="_method" value="put">
                         <input type="hidden" name="id" value="{{ article.id }}">

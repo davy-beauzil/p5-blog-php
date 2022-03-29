@@ -50,6 +50,21 @@ class ArticleRepository extends AbstractRepository
         throw new PDOException('Une erreur s’est produite lors de la récupération de l’article');
     }
 
+    public function getArticleWithAuthor(string $id): ArticleWithUser
+    {
+        $pdo = self::getPDO();
+        $sql = 'SELECT article.*, users.firstName as userFirstName, users.lastName as userLastName FROM article INNER JOIN users ON article.userId = users.id WHERE article.id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'id' => $id,
+        ]);
+        $article = $stmt->fetchObject(ArticleWithUser::class);
+        if ($article instanceof ArticleWithUser) {
+            return $article;
+        }
+        throw new PDOException('Une erreur s’est produite lors de la récupération de l’article');
+    }
+
     /**
      * @return ArticleWithUser[]
      */
