@@ -8,6 +8,7 @@ use App\Dto\UpdateUser;
 use App\Repository\UserRepository;
 use App\Router\Parameters;
 use App\Services\CsrfServiceProvider;
+use App\Services\Exception\DeleteUserException;
 use App\Services\Exception\UpdateUserException;
 use App\Services\Validator\UpdateUserValidator;
 use App\Services\Voters\IsAdminVoter;
@@ -61,9 +62,21 @@ class UsersDashboardController extends AbstractController
         /** @var ?string $userId */
         $userId = $parameters->get['id'] ?? null;
         if (ctype_digit($userId)) {
-            $this->userRepository->delete((int) $userId);
+            try {
+                $this->userRepository->delete((int) $userId);
+                $this->redirectToRoute('adminUsers', [
+                    'success' => 'Le compte utilisateur a bien été supprimé',
+                ]);
+            } catch (DeleteUserException $e) {
+                $this->redirectToRoute('adminUsers', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        } else {
+            $this->redirectToRoute('adminUsers', [
+                'error' => 'Une erreur est survenue lors de la suppression de l’utilisateur',
+            ]);
         }
-        $this->redirectToRoute('adminUsers');
     }
 
     public function updateIndex(Parameters $parameters): void

@@ -11,7 +11,8 @@ use function is_string;
 
 class CreateArticleValidator extends Validator
 {
-    public function validate(mixed $title, mixed $excerpt, mixed $content,): Article {
+    public function validate(mixed $title, mixed $excerpt, mixed $content,): Article
+    {
         if (! $this->biggerThan(0, $title) || ! is_string($title)) {
             throw new CreateArticleException('Le titre ne doit pas être vide.');
         }

@@ -10,6 +10,7 @@ use App\Dto\MyAccount\UpdatePassword;
 use App\Dto\Register;
 use App\Dto\UpdateUser;
 use App\Model\User;
+use App\Services\Exception\DeleteUserException;
 use App\Services\Exception\LoginException;
 use App\Services\Exception\RegisterException;
 use App\Services\Exception\UpdateIdentityException;
@@ -197,7 +198,7 @@ class UserRepository extends AbstractRepository
         throw new PDOException('Une erreur s’est produite lors de la récupération des articles');
     }
 
-    public function delete(int $userId): bool
+    public function delete(int $userId): void
     {
         $pdo = self::getPDO();
         $sql = 'DELETE FROM users WHERE id = :userId;';
@@ -205,8 +206,9 @@ class UserRepository extends AbstractRepository
         $stmt->execute([
             'userId' => $userId,
         ]);
-
-        return $stmt->rowCount() >= 1;
+        if ($stmt->rowCount() === 0) {
+            throw new DeleteUserException('Une erreur est survenue lors de la suppression de l’utilisateur');
+        }
     }
 
     public function updateUserFromDashboard(UpdateUser $updateUser): void
