@@ -8,6 +8,7 @@ use App\Dto\UpdateUser;
 use App\Repository\UserRepository;
 use App\Router\Parameters;
 use App\Services\CsrfServiceProvider;
+use App\Services\Exception\DeleteUserException;
 use App\Services\Exception\UpdateUserException;
 use App\Services\Validator\UpdateUserValidator;
 use App\Services\Voters\IsAdminVoter;
@@ -42,12 +43,11 @@ class UsersDashboardController extends AbstractController
         $page = $parameters->get['page'] ?? null;
         $page = ctype_digit($page) ? (int) $page : 1;
         $page = $page <= 0 ? 1 : $page;
-
         $nbrUsers = $this->userRepository->countUsers();
         $pages = ceil($nbrUsers / self::NBR_USERS_PER_PAGE);
         $firstUser = ($page - 1) * self::NBR_USERS_PER_PAGE;
         $users = $this->userRepository->getPaginatedUsers($firstUser, self::NBR_USERS_PER_PAGE);
-        $this->render('dashboard/admin/users-manager', [
+        $this->render('dashboard/users/manager', [
             'users' => $users,
             'pages' => $pages,
             'currentPage' => $page,
@@ -62,9 +62,21 @@ class UsersDashboardController extends AbstractController
         /** @var ?string $userId */
         $userId = $parameters->get['id'] ?? null;
         if (ctype_digit($userId)) {
-            $this->userRepository->delete((int) $userId);
+            try {
+                $this->userRepository->delete((int) $userId);
+                $this->redirectToRoute('adminUsers', [
+                    'success' => 'Le compte utilisateur a bien été supprimé',
+                ]);
+            } catch (DeleteUserException $e) {
+                $this->redirectToRoute('adminUsers', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        } else {
+            $this->redirectToRoute('adminUsers', [
+                'error' => 'Une erreur est survenue lors de la suppression de l’utilisateur',
+            ]);
         }
-        $this->redirectToRoute('adminUsers');
     }
 
     public function updateIndex(Parameters $parameters): void
@@ -80,7 +92,7 @@ class UsersDashboardController extends AbstractController
         }
 
         $user = $this->userRepository->getUser('id', (string) $userId);
-        $this->render('dashboard/admin/user-update', [
+        $this->render('dashboard/users/update', [
             'user' => $user,
             'csrf' => CsrfServiceProvider::generate('update-user'),
         ]);

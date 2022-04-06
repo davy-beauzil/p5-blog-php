@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DevBlog | Gestion des utilisateurs{% endblock %}
+
+{% block main_content %}
+    <div class="container mt-5">
+        <div class="row justify-content-between">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-end">
+                        <h2 class="header-title">
+                            {{ article.title }}
+                        </h2>
+                        <h6 class="header-pretitle">
+                            {{ article.excerpt }}
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>Écrit le {{ article.createdAt|date('d/m/Y') }} {% if article.createdAt != article.updatedAt %}<br> modifié le {{ article.updatedAt|date('d/m/Y') }}{% endif %}</p>
+                    <div>
+                        {{ article.content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

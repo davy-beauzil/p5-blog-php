@@ -1,1 +1,0 @@
-console.log('Le script show-modal.js est bien chargé');
