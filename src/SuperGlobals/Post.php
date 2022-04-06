@@ -35,7 +35,7 @@ class Post
      */
     public static function get(string $key): mixed
     {
-        return $_POST[$key] ?? null;
+        return htmlspecialchars($_POST[$key]);
     }
 
     /**
@@ -51,6 +51,6 @@ class Post
      */
     public static function getGlobalSession(): array
     {
-        return $_POST;
+        return array_map('htmlspecialchars', $_POST);
     }
 }

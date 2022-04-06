@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\SuperGlobals;
 
-use const INPUT_GET;
-
 class Get
 {
     /**
@@ -21,7 +19,7 @@ class Get
      */
     public static function get(string $key): mixed
     {
-        return filter_input(INPUT_GET, $key);
+        return htmlspecialchars($_GET[$key]);
     }
 
     /**
@@ -37,6 +35,6 @@ class Get
      */
     public static function getGlobalSession(): array
     {
-        return $_GET;
+        return array_map('htmlspecialchars', $_GET);
     }
 }
