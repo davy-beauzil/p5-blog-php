@@ -24,6 +24,23 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-end">
+                        <h2 class="header-title">
+                            Espace commentaires
+                        </h2>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="/article/{{ article.id }}/comment/new" method="post">
+                        <input type="hidden" name="_csrf" value="{{ csrf }}">
+                        <textarea  class="form-control mb-3" name="comment" id="comment"></textarea>
+                        <input type="submit" class="btn btn-primary" value="Commenter">
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

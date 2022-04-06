@@ -270,6 +270,13 @@ class Router
                     'ArticlesDashboardController',
                     'create'
                 ),
+                new Route(
+                    '/article/{article_id}/comment/new',
+                    'POST',
+                    'add_comment',
+                    'CommentController',
+                    'add'
+                ),
             ],
             'PUT', 'put' => [
                 new Route('/my-account/update', 'PUT', 'updateIdentity', 'MyAccountController', 'updateIdentity'),
