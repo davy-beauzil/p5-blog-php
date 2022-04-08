@@ -208,7 +208,6 @@ class Router
                 new Route('/login', 'GET', 'login', 'LoginController', 'loginIndex'),
                 new Route('/logout', 'GET', 'logout', 'LogoutController', 'logout'),
                 new Route('/register', 'GET', 'registerIndex', 'RegisterController', 'registerIndex'),
-
                 new Route('/my-account', 'GET', 'myAccount', 'MyAccountController', 'myAccount'),
                 new Route(
                     '/my-account/update/password',
@@ -257,13 +256,19 @@ class Router
                     'updateIndex'
                 ),
                 new Route('/article/{id}', 'GET', 'article', 'ArticleController', 'article'),
-
                 new Route('/user/{id}', 'GET', 'user', 'UserController', 'user'),
 
                 new Route('/dashboard/comments', 'GET', 'comments_manager', 'CommentController', 'manager'),
                 new Route('/comment/{comment_id}/valid', 'GET', 'valid_comment', 'CommentController', 'valid'),
-                new Route('/comment/{comment_id}/invalid', 'GET', 'invalid_comment', 'CommentController', 'invalid'),
+                new Route(
+                    '/comment/{comment_id}/invalid',
+                    'GET',
+                    'invalid_comment',
+                    'CommentController',
+                    'invalid'
+                ),
                 new Route('/dashboard/comments', 'GET', 'comments_manager', 'CommentController', 'manager'),
+                new Route('/comment/{comment_id}/delete', 'GET', 'comment_delete', 'CommentController', 'delete'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
@@ -300,6 +305,7 @@ class Router
                     'ArticlesDashboardController',
                     'update'
                 ),
+                new Route('/comment/{comment_id}/update', 'PUT', 'update_comment', 'CommentController', 'update'),
             ],
             default => [],
         };

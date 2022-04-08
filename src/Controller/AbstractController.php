@@ -7,8 +7,11 @@ namespace App\Controller;
 use App\Router\Router;
 use App\Services\CsrfServiceProvider;
 use App\SuperGlobals\Get;
+use App\SuperGlobals\Server;
 use App\SuperGlobals\Session;
+use function count;
 use Exception;
+use function is_string;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -61,6 +64,25 @@ class AbstractController
     {
         $router = new Router();
         $this->redirect($router->generateUrl($route_name, $parameters), $status_code);
+    }
+
+    /**
+     * @param array<string, mixed> $parameters
+     */
+    public function redirectToLastPage(array $parameters): void
+    {
+        $url = Server::get('HTTP_REFERER');
+        if (is_string($url)) {
+            if (str_contains($url, '?')) {
+                $url = mb_substr($url, 0, (int) mb_strpos($url, '?'));
+            }
+            if (count($parameters) > 0) {
+                $url = sprintf('%s?%s', $url, http_build_query($parameters));
+            }
+            $this->redirect($url);
+        } else {
+            $this->redirectToRoute('homepage');
+        }
     }
 
     public function checkCSRF(string $key, string $csrf_token): bool

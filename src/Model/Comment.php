@@ -8,28 +8,24 @@ use App\Repository\UserRepository;
 
 class Comment
 {
-    public ?int $id = null;
+    public int $id;
 
-    public ?string $content = null;
+    public string $content;
 
-    public ?string $isApprouved = null;
+    public string $isApprouved;
 
-    public ?string $userId = null;
+    public string $userId;
 
-    public ?int $articleId = null;
+    public int $articleId;
 
-    public ?int $createdAt = null;
+    public int $createdAt;
 
-    public ?int $updatedAt = null;
+    public int $updatedAt;
 
     public function getAuthor(): ?User
     {
-        if ($this->userId !== null) {
-            $userRepository = new UserRepository();
+        $userRepository = new UserRepository();
 
-            return $userRepository->getUser('id', $this->userId);
-        }
-
-        return null;
+        return $userRepository->getUser('id', $this->userId);
     }
 }

@@ -9,6 +9,7 @@ use App\Router\Parameters;
 use App\Services\AuthServiceProvider;
 use App\Services\Exception\CommentException;
 use App\Services\Voters\IsAdminVoter;
+use App\Services\Voters\IsCurrentUserVoter;
 use App\Services\Voters\Voters;
 use function is_string;
 use function mb_strlen;
@@ -112,6 +113,48 @@ class CommentController extends AbstractController
             ]);
         } catch (CommentException $e) {
             $this->redirectToRoute('comments_manager', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function update(Parameters $parameters): void
+    {
+        $userId = $parameters->put['user_id'];
+        if (! $this->voters->vote(IsCurrentUserVoter::IS_SAME, $userId)) {
+            $this->redirectToRoute('homepage');
+        }
+        $commentId = $parameters->get['comment_id'];
+        $comment = $parameters->put['comment'];
+        try {
+            if (! is_string($comment) || mb_strlen($comment) === 0) {
+                throw new CommentException('Une erreur s’est produite lors de la modification du commentaire');
+            }
+            $this->commentRepository->update($commentId, $comment);
+            $this->redirectToLastPage([
+                'success' => 'Votre commentaire a bien été modifié.',
+            ]);
+        } catch (CommentException $e) {
+            $this->redirectToLastPage([
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function delete(Parameters $parameters): void
+    {
+        $commentId = $parameters->get['comment_id'];
+        try {
+            $comment = $this->commentRepository->get($commentId);
+            if (! $this->voters->vote(IsCurrentUserVoter::IS_SAME, $comment->userId)) {
+                $this->redirectToRoute('homepage');
+            }
+            $this->commentRepository->delete($comment->id);
+            $this->redirectToLastPage([
+                'success' => 'Votre commentaire a bien été supprimé.',
+            ]);
+        } catch (CommentException $e) {
+            $this->redirectToLastPage([
                 'error' => $e->getMessage(),
             ]);
         }

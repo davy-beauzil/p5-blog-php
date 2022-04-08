@@ -27,7 +27,7 @@
                     </h2>
                     {% if app.user %}
                     <form action="/article/{{ article.id }}/comment/new" method="post">
-                        <input type="hidden" name="_csrf" value="{{ csrf }}">
+                        <input type="hidden" name="_csrf" value="{{ add_comment_csrf }}">
                         <textarea  class="form-control mb-3" name="comment" id="comment" placeholder="Ajouter un commentaire..."></textarea>
                         <input type="submit" class="btn btn-primary" value="Commenter">
                     </form>
@@ -40,12 +40,28 @@
                         {% for comment in comments|reverse %}
                         <div class="card mb-3">
                             <div class="card-header bg-light">
-                            {% if comment.getAuthor %}
-                                <p class="m-0"><a href="/user/{{ comment.getAuthor.id }}">{{ comment.getAuthor.firstName }}</a>, le {{ comment.createdAt|date('d/m/Y H:i') }}</p>
-                            {% endif %}
+                                <div class="d-flex justify-content-between">
+                                    <p class="d-inline-block m-0"><a href="/user/{{ comment.getAuthor.id }}">{{ comment.getAuthor.firstName }}</a>, le {{ comment.createdAt|date('d/m/Y H:i') }}</p>
+                                    {% if comment.getAuthor.id == app.user.id %}
+                                    <div>
+                                        <button class="btn btn-primary btn-sm updateComment" comment="{{ comment.id }}">Modifier</button>
+                                        <a href="/comment/{{ comment.id }}/delete" class="btn btn-danger btn-sm">Supprimer</a>
+                                    </div>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="card-body">
-                                <p class="m-0">{{ comment.content }}</p>
+                                <p class="m-0 updateComment" comment="{{ comment.id }}">{{ comment.content }}</p>
+                                <form comment="{{ comment.id }}" class="mt-3 d-none flex-column updateComment" action="/comment/{{ comment.id }}/update" method="post">
+                                    <input type="hidden" name="_method" value="put">
+                                    <input type="hidden" name="user_id" value="{{ comment.getAuthor.id }}">
+                                    <input type="hidden" name="_csrf" value="{{ update_comment_csrf }}">
+                                    <textarea class="w-100 mb-3 p-2" name="comment" id="comment">{{ comment.content }}</textarea>
+                                    <div>
+                                        <input class="btn btn-primary" type="submit" value="Modifier">
+                                        <button class="btn btn-danger updateCommentCancel" comment="{{ comment.id }}" type="submit">Annuler</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         {% endfor %}
@@ -54,4 +70,54 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        updateCommentButtons = document.querySelectorAll('button.updateComment');
+        updateCommentForms = document.querySelectorAll('form.updateComment');
+        updateComments = document.querySelectorAll('p.updateComment');
+        updateCommentCancelButtons = document.querySelectorAll('button.updateCommentCancel');
+
+        updateCommentButtons.forEach((button) => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                comment = button.getAttribute('comment');
+
+                updateCommentForms.forEach((form) => {
+                    if(form.getAttribute('comment') === comment){
+                        form.classList.add('d-flex')
+                        form.classList.remove('d-none')
+                    }
+                })
+                updateComments.forEach((updateComment) => {
+                    if(updateComment.getAttribute('comment') === comment){
+                        updateComment.classList.add('d-none')
+                        updateComment.classList.remove('d-inline')
+                    }
+                })
+            })
+        })
+
+        updateCommentCancelButtons.forEach((button) => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                comment = button.getAttribute('comment');
+
+                updateCommentForms.forEach((form) => {
+                    if(form.getAttribute('comment') === comment){
+                        form.classList.remove('d-flex')
+                        form.classList.add('d-none')
+                    }
+                })
+                updateComments.forEach((updateComment) => {
+                    if(updateComment.getAttribute('comment') === comment){
+                        updateComment.classList.remove('d-none')
+                        updateComment.classList.add('d-inline')
+                    }
+                })
+            })
+        })
+    </script>
 {% endblock %}
