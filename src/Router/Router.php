@@ -259,6 +259,11 @@ class Router
                 new Route('/article/{id}', 'GET', 'article', 'ArticleController', 'article'),
 
                 new Route('/user/{id}', 'GET', 'user', 'UserController', 'user'),
+
+                new Route('/dashboard/comments', 'GET', 'comments_manager', 'CommentController', 'manager'),
+                new Route('/comment/{comment_id}/valid', 'GET', 'valid_comment', 'CommentController', 'valid'),
+                new Route('/comment/{comment_id}/invalid', 'GET', 'invalid_comment', 'CommentController', 'invalid'),
+                new Route('/dashboard/comments', 'GET', 'comments_manager', 'CommentController', 'manager'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
@@ -270,13 +275,7 @@ class Router
                     'ArticlesDashboardController',
                     'create'
                 ),
-                new Route(
-                    '/article/{article_id}/comment/new',
-                    'POST',
-                    'add_comment',
-                    'CommentController',
-                    'add'
-                ),
+                new Route('/article/{article_id}/comment/new', 'POST', 'add_comment', 'CommentController', 'add'),
             ],
             'PUT', 'put' => [
                 new Route('/my-account/update', 'PUT', 'updateIdentity', 'MyAccountController', 'updateIdentity'),

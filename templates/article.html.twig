@@ -22,23 +22,34 @@
                     <div>
                         {{ article.content }}
                     </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="row align-items-end">
-                        <h2 class="header-title">
-                            Espace commentaires
-                        </h2>
-                    </div>
-                </div>
-                <div class="card-body">
+                    <h2 class="header-title my-5">
+                        Espace commentaires
+                    </h2>
+                    {% if app.user %}
                     <form action="/article/{{ article.id }}/comment/new" method="post">
                         <input type="hidden" name="_csrf" value="{{ csrf }}">
-                        <textarea  class="form-control mb-3" name="comment" id="comment"></textarea>
+                        <textarea  class="form-control mb-3" name="comment" id="comment" placeholder="Ajouter un commentaire..."></textarea>
                         <input type="submit" class="btn btn-primary" value="Commenter">
                     </form>
+                    {% else %}
+                        <div class="alert alert-secondary" role="alert">
+                            Vous devez être connecté pour commenter un article
+                        </div>
+                    {% endif %}
+                    <div class="mt-3">
+                        {% for comment in comments|reverse %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                            {% if comment.getAuthor %}
+                                <p class="m-0"><a href="/user/{{ comment.getAuthor.id }}">{{ comment.getAuthor.firstName }}</a>, le {{ comment.createdAt|date('d/m/Y H:i') }}</p>
+                            {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <p class="m-0">{{ comment.content }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
