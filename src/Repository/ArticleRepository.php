@@ -71,7 +71,7 @@ class ArticleRepository extends AbstractRepository
     public function getPaginatedArticles(int $indexFirstArticle, int $lenght): array
     {
         $pdo = self::getPDO();
-        $sql = 'SELECT article.*, users.firstName as userFirstName, users.lastName as userLastName FROM article INNER JOIN users ON article.userId = users.id LIMIT :indexFirstArticle, :lenght;';
+        $sql = 'SELECT article.*, users.firstName as userFirstName, users.lastName as userLastName FROM article INNER JOIN users ON article.userId = users.id ORDER BY article.createdAt DESC LIMIT :indexFirstArticle, :lenght;';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'indexFirstArticle' => $indexFirstArticle,

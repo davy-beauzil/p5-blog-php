@@ -264,6 +264,7 @@ class Router
                 new Route('/contact', 'GET', 'contact', 'ContactController', 'index'),
                 new Route('/dashboard/contacts', 'GET', 'contact_manager', 'ContactController', 'manager'),
                 new Route('/contact/{contact_id}/delete', 'GET', 'delete_contact', 'ContactController', 'delete'),
+                new Route('/articles', 'GET', 'articles', 'ArticleController', 'articles'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
