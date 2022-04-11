@@ -6,6 +6,7 @@ namespace App\Services\Voters;
 
 use App\Model\User;
 use App\Services\AuthServiceProvider;
+use function is_string;
 
 class IsCurrentUserVoter implements VoterInterface
 {
@@ -19,6 +20,7 @@ class IsCurrentUserVoter implements VoterInterface
     public function vote(string $attribute, mixed $subject): bool
     {
         $user = AuthServiceProvider::getUser();
+        $subject = is_string($subject) && ctype_digit($subject) ? (int) $subject : $subject;
 
         return $user instanceof User && $subject === $user->id;
     }

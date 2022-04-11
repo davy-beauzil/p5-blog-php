@@ -36,7 +36,7 @@ class UsersDashboardController extends AbstractController
     public function index(Parameters $parameters): void
     {
         if (! $this->voters->vote(IsAdminVoter::IS_ADMIN)) {
-            $this->redirectToRoute('homepage');
+            $this->render404('Votre page est introuvable');
         }
 
         /** @var ?string $page */

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Une erreur s'est produite{% endblock %}
+
+{% block main_content %}
+    <div class="container">
+        <div class="row">
+{#            <h1 class="text-center my-5">Oops, une erreur s'est produite</h1>#}
+            <div class="vh-100 position-absolute top-0 start-0 end-0 bottom-0 d-flex flex-column justify-content-center align-items-center" style="z-index: -1" id="main">
+                <h1 class="mr-3 pr-3 align-top border-right inline-block align-content-center">404</h1>
+                <div class="inline-block align-middle">
+                    <h2 class="font-weight-normal lead text-center" id="desc">La page que vous avez demandé n'a pas été trouvée.</h2>
+                </div>
+            </div>
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

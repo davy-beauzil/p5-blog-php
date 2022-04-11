@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\SuperGlobals;
 
+use function is_string;
+
 class Get
 {
     /**
@@ -19,7 +21,11 @@ class Get
      */
     public static function get(string $key): mixed
     {
-        return htmlspecialchars($_GET[$key]);
+        if (is_string($_GET[$key])) {
+            return htmlspecialchars($_GET[$key]);
+        }
+
+        return $_GET[$key];
     }
 
     /**
