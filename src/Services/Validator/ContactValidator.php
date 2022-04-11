@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Validator;
 
 use App\Model\Contact;
@@ -7,6 +9,7 @@ use App\Router\Parameters;
 use App\Services\AuthServiceProvider;
 use App\Services\CsrfServiceProvider;
 use App\Services\Exception\ContactException;
+use function is_string;
 
 class ContactValidator extends Validator
 {
@@ -16,11 +19,12 @@ class ContactValidator extends Validator
         $lastName = $parameters->post['lastName'];
         $email = $parameters->post['email'];
         $message = $parameters->post['message'];
+        $contact = new Contact();
 
-        if(!is_string($firstName) || !is_string($lastName) || !is_string($email) || !is_string($message)){
-            throw new ContactException('Un des champs est au mauvais format');
-        }
-        if(!AuthServiceProvider::isAuthenticated()){
+        if (! AuthServiceProvider::isAuthenticated()) {
+            if (! is_string($firstName) || ! is_string($lastName) || ! is_string($email) || ! is_string($message)) {
+                throw new ContactException('Un des champs est au mauvais format');
+            }
             if (! $parameters->has(Parameters::POST, 'firstName', 'lastName', 'email', 'message', '_csrf')) {
                 throw new ContactException('Un des champs est manquant pour la demande de contact');
             }
@@ -33,23 +37,34 @@ class ContactValidator extends Validator
             if (! $this->isEmail($parameters->post['email']) || ! is_string($parameters->post['email'])) {
                 throw new ContactException('Ce n’est pas un email valide');
             }
-        }else{
-            if (! $parameters->has(Parameters::POST,'message', '_csrf')) {
-                throw new ContactException('Un des champs est manquant pour la demande de contact');
+            if (! $this->lowerThan(1001, $parameters->post['message']) || ! is_string($parameters->post['message'])) {
+                throw new ContactException('Le message doit faire 1000 caractères maximum');
             }
+            if (! is_string($parameters->post['_csrf']) || ! CsrfServiceProvider::validate(
+                'contact',
+                $parameters->post['_csrf']
+            )) {
+                throw new ContactException('Le formulaire est invalide.');
+            }
+
+            return $contact->createForLogoutUser($firstName, $lastName, $email, $message);
+        }
+        if (! is_string($message)) {
+            throw new ContactException('Un des champs est au mauvais format');
+        }
+        if (! $parameters->has(Parameters::POST, 'message', '_csrf')) {
+            throw new ContactException('Un des champs est manquant pour la demande de contact');
         }
         if (! $this->lowerThan(1001, $parameters->post['message']) || ! is_string($parameters->post['message'])) {
             throw new ContactException('Le message doit faire 1000 caractères maximum');
         }
-        if(!is_string($parameters->post['_csrf']) || !CsrfServiceProvider::validate('contact', $parameters->post['_csrf'])){
+        if (! is_string($parameters->post['_csrf']) || ! CsrfServiceProvider::validate(
+            'contact',
+            $parameters->post['_csrf']
+        )) {
             throw new ContactException('Le formulaire est invalide.');
         }
 
-        $contact = new Contact();
-        if(AuthServiceProvider::isAuthenticated()){
-            return $contact->createForLoggedInUser($message);
-        }else{
-            return $contact->createForLogoutUser($firstName, $lastName, $email, $message);
-        }
+        return $contact->createForLoggedInUser($message);
     }
 }

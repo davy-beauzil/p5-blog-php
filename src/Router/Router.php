@@ -262,6 +262,8 @@ class Router
                 new Route('/dashboard/comments', 'GET', 'comments_manager', 'CommentController', 'manager'),
                 new Route('/comment/{comment_id}/delete', 'GET', 'comment_delete', 'CommentController', 'delete'),
                 new Route('/contact', 'GET', 'contact', 'ContactController', 'index'),
+                new Route('/dashboard/contacts', 'GET', 'contact_manager', 'ContactController', 'manager'),
+                new Route('/contact/{contact_id}/delete', 'GET', 'delete_contact', 'ContactController', 'delete'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
