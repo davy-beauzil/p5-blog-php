@@ -1,0 +1,30 @@
+{% extends './base.html.twig' %}
+
+{% block title %}DevBlog | Gestion des utilisateurs{% endblock %}
+
+{% block main_content %}
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-center">
+            <h1 class="display-4 text-center">Tous les articles</h1>
+            {% for article in articles %}
+                <div class="p-0 card m-3 col-sm-3 col-12">
+                    <div class="card-header">
+                        <strong>{{ article.title }}</strong>
+                    </div>
+                    <div class="card-body">
+                        {{ article.excerpt }} <a href="/article/{{ article.id }}">Voir plus</a>
+                    </div>
+                </div>
+            {% endfor %}
+            <nav class="d-flex justify-content-center mt-5">
+                <ul class="pagination">
+                    <li class="page-item {{ currentPage == 1 ? 'disabled' : '' }}"><a class="page-link" href="?page={{ currentPage - 1 }}">Précedent</a></li>
+                    {% for page in 1..pages %}
+                        <li class="page-item {{ currentPage == page ? 'active' : '' }}"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                    {% endfor %}
+                    <li class="page-item {{ currentPage == pages ? 'disabled' : '' }}"><a class="page-link" href="?page={{ currentPage + 1 }}">Suivant</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}

@@ -17,13 +17,6 @@ use Twig\Loader\FilesystemLoader;
 
 class AbstractController
 {
-    private AbstractController $abstractController;
-
-    public function __construct()
-    {
-        $this->abstractController = new self();
-    }
-
     /**
      * @param array<string, mixed> $parameters
      */
@@ -32,7 +25,7 @@ class AbstractController
         try {
             $this->renderView($view, $parameters);
         } catch (Exception) {
-            $this->abstractController->render404();
+            $this->render404();
         }
     }
 

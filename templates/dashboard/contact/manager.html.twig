@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DevBlog | Gestion des articles{% endblock %}
+
+{% block main_content %}
+    <div class="container mt-5">
+        <div class="row justify-content-between">
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-header-title me-auto">
+                        Gestion des contacts
+                    </h4>
+
+                    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+                        <li class="nav-item">
+                            <a href="/dashboard/users" class="nav-link">Utilisateurs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/dashboard/articles" class="nav-link">Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/dashboard/comments" class="nav-link">Commentaires</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/dashboard/contacts" class="nav-link active">Contacts</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="card-body">
+                    <div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item {{ currentPage == 1 ? 'disabled' : '' }}"><a class="page-link" href="?page={{ currentPage - 1 }}">Précedent</a></li>
+                                {% for page in 1..pages %}
+                                    <li class="page-item {{ currentPage == page ? 'active' : '' }}"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                                {% endfor %}
+                                <li class="page-item {{ currentPage == pages ? 'disabled' : '' }}"><a class="page-link" href="?page={{ currentPage + 1 }}">Suivant</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+{#                    <table class="table">#}
+{#                        <thead>#}
+{#                        <tr>#}
+{#                            <th scope="col">Prénom</th>#}
+{#                            <th scope="col">Nom</th>#}
+{#                            <th scope="col">Email</th>#}
+{#                            <th scope="col">Message</th>#}
+{#                            <th scope="col">Envoyé le</th>#}
+{#                            <th scope="col">Actions</th>#}
+{#                        </tr>#}
+{#                        </thead>#}
+{#                        <tbody>#}
+{#                        {% for contact in contacts %}#}
+{#                            <tr>#}
+{#                                {% if contact.userId == null %}#}
+{#                                    <td>{{ contact.firstName }}</td>#}
+{#                                    <td>{{ contact.lastName }}</td>#}
+{#                                    <td><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></td>#}
+{#                                {% else %}#}
+{#                                    <td>{{ contact.getAuthor.firstName }}</td>#}
+{#                                    <td>{{ contact.getAuthor.lastName }}</td>#}
+{#                                    <td><a href="mailto:{{ contact.getAuthor.email }}">{{ contact.getAuthor.email }}</a></td>#}
+{#                                {% endif %}#}
+{#                                <td>{{ contact.message }}</td>#}
+{#                                <td>{{ contact.createdAt|date('d/m/Y H:i') }}</td>#}
+{#                                <td>#}
+{#                                    {% if comment.isApprouved == true %}#}
+{#                                        <a href="/comment/{{ comment.id }}/invalid" class="btn btn-danger">Désapprouver</a>#}
+{#                                    {% else %}#}
+{#                                        <a href="/comment/{{ comment.id }}/valid" class="btn btn-success">Approuver</a>#}
+{#                                    {% endif %}#}
+{#                                </td>#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{#                        </tbody>#}
+{#                    </table>#}
+
+                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                        {% for contact in contacts %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#contact-{{ contact.id }}" aria-expanded="true" aria-controls="contact-{{ contact.id }}">
+                                    {% if contact.userId == null %} {{ contact.firstName }} {{ contact.lastName }}{% else %} {{ contact.getAuthor.firstName}} {{ contact.getAuthor.lastName }}{% endif %}, le {{ contact.createdAt|date('d/m/Y à H:i') }}
+                                </button>
+                            </h2>
+                            <div id="contact-{{ contact.id }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                                <div class="accordion-body">
+                                    <a href="mailto:{% if contact.userId == null %} {{ contact.email }} {% else %} {{ contact.getAuthor.email}} {% endif %}">{% if contact.userId == null %} {{ contact.email }} {% else %} {{ contact.getAuthor.email}} {% endif %}</a>
+                                    <p>{{ contact.message }}</p>
+                                    <a href="/contact/{{ contact.id }}/delete" class="btn btn-sm btn-danger">Supprimer</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

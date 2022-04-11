@@ -6,21 +6,21 @@ namespace App\Model;
 
 class User
 {
-    public ?int $id = null;
+    public int $id;
 
-    public ?string $firstName = null;
+    public string $firstName;
 
-    public ?string $lastName = null;
+    public string $lastName;
 
-    public ?string $email = null;
+    public string $email;
 
-    public ?string $password = null;
+    public ?string $password;
 
-    public ?bool $isValidated = null;
+    public bool $isValidated;
 
-    public ?bool $isAdmin = null;
+    public bool $isAdmin;
 
-    public ?int $createdAt = null;
+    public int $createdAt;
 
-    public ?int $updatedAt = null;
+    public int $updatedAt;
 }

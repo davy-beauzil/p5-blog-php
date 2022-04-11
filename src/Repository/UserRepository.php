@@ -84,7 +84,6 @@ class UserRepository extends AbstractRepository
         $user = $stmt->fetchObject(User::class);
 
         if (
-            $user->id === null ||
             ! is_string($user->password) ||
             ! password_verify($login->password, $user->password)
         ) {
