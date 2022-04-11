@@ -17,6 +17,13 @@ use Twig\Loader\FilesystemLoader;
 
 class AbstractController
 {
+    private AbstractController $abstractController;
+
+    public function __construct()
+    {
+        $this->abstractController = new self();
+    }
+
     /**
      * @param array<string, mixed> $parameters
      */
@@ -24,9 +31,8 @@ class AbstractController
     {
         try {
             $this->renderView($view, $parameters);
-        } catch (Exception $e) {
-            $errorController = new ErrorController();
-            $errorController->pageNotFound($e->getMessage());
+        } catch (Exception) {
+            $this->abstractController->render404();
         }
     }
 
@@ -49,6 +55,14 @@ class AbstractController
         $twig = new Environment($loader, []);
         $template = $twig->load($view . '.html.twig');
         $template->display($parameters);
+    }
+
+    public function render404(?string $error = null): void
+    {
+        $this->render('404', [
+            'error' => $error,
+        ]);
+        exit();
     }
 
     public function redirect(string $url, int $status_code = 302): void

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Router;
 
-use App\Controller\ErrorController;
+use App\Controller\AbstractController;
 use App\SuperGlobals\Env;
 use App\SuperGlobals\Get;
 use App\SuperGlobals\Post;
@@ -116,14 +116,14 @@ class Router
      */
     public function routing(string $path, string $method): void
     {
-        $errorController = new ErrorController();
+        $abstractController = new AbstractController();
         if (str_contains($path, '?')) {
             $path = mb_substr($path, 0, (int) mb_strpos($path, '?'));
         }
         $this->matchRouteAndGetParameters($path, $method);
 
         if ($this->route === null) {
-            $errorController->pageNotFound('Aucune route n’a été trouvée');
+            $abstractController->render404();
             exit();
         }
 
@@ -131,22 +131,14 @@ class Router
 
         // Check if controller exists
         if (! file_exists($controller_path)) {
-            $errorController->pageNotFound('Le controlleur demandé n’existe pas');
-            exit();
+            $abstractController->render404();
         }
         require_once $controller_path;
         $controller = new ('App\Controller\\' . $this->route->getControllerName())();
 
         // Check if method exists
         if (! method_exists($controller, $this->route->getControllerMethod())) {
-            $errorController->pageNotFound(
-                sprintf(
-                    'La méthode "%s" du controlleur "%s" n’existe pas',
-                    $this->route->getControllerMethod(),
-                    $this->route->getControllerName()
-                )
-            );
-            exit();
+            $abstractController->render404();
         }
         $controller->{$this->route->getControllerMethod()}($this->route->getParameters());
     }
