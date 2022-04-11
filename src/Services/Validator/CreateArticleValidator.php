@@ -23,7 +23,7 @@ class CreateArticleValidator extends Validator
             throw new CreateArticleException('Le contenu ne doit pas être vide.');
         }
         $user = AuthServiceProvider::getUser();
-        if ($user === null || $user->id === null) {
+        if ($user === null) {
             throw new CreateArticleException('Une erreur est survenue pendant la validation des données.');
         }
 

@@ -261,6 +261,7 @@ class Router
                 ),
                 new Route('/dashboard/comments', 'GET', 'comments_manager', 'CommentController', 'manager'),
                 new Route('/comment/{comment_id}/delete', 'GET', 'comment_delete', 'CommentController', 'delete'),
+                new Route('/contact', 'GET', 'contact', 'ContactController', 'index'),
             ],
             'POST', 'post' => [
                 new Route('/login', 'POST', 'login', 'LoginController', 'login'),
@@ -273,6 +274,7 @@ class Router
                     'create'
                 ),
                 new Route('/article/{article_id}/comment/new', 'POST', 'add_comment', 'CommentController', 'add'),
+                new Route('/contact', 'POST', 'add_contact', 'ContactController', 'contact'),
             ],
             'PUT', 'put' => [
                 new Route('/my-account/update', 'PUT', 'updateIdentity', 'MyAccountController', 'updateIdentity'),
