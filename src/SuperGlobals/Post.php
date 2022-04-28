@@ -36,11 +36,13 @@ class Post
      */
     public static function get(string $key): mixed
     {
-        if (is_string($_POST[$key])) {
-            return htmlspecialchars($_POST[$key]);
+        if(key_exists($key, $_POST) ){
+            if (is_string($_POST[$key])) {
+                return htmlspecialchars($_POST[$key]);
+            }
+            return $_POST[$key];
         }
-
-        return $_GET[$key];
+        return null;
     }
 
     /**

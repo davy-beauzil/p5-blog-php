@@ -7,8 +7,11 @@ d'applications web PHP / Symfony chez OpenClassrooms.
 * [Diagrammes que j'ai réalisé](docs/diagrams.md)
 
 ## Installation
-
-Une fois que vous avez cloné le projet, faite un copier-coller du fichier ``.env`` et nommez le ``.env.local``
+Une fois que vous avez cloné le projet, il faut installer les librairies de Composer :
+```text
+composer install
+```
+puis faites un copier-coller du fichier ``.env`` et nommez le ``.env.local``
 
 Vous pouvez alors remplir les informations de votre base de données et votre adresse mail (afin de recevoir les emails du formulaire de contact) :
 ```text
@@ -37,7 +40,7 @@ Vous pouvez maintenant voir une nouvelle base de données (``p5_blog_php``) avec
 
 Pour lancer le serveur, exécutez cette commande :
 ```bash
-php -S localhost:8000 -t /public
+php -S localhost:8000 -t public/
 ```
 Ouvrez votre navigateur, et accédez au site avec cette url : [http://localhost:8000](http://localhost:8000)
 

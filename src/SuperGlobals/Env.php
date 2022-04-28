@@ -19,7 +19,13 @@ class Env
      */
     public static function get(string $key): mixed
     {
-        return $_ENV[$key] ?? null;
+        if(key_exists($key, $_ENV) ){
+            if (is_string($_ENV[$key])) {
+                return htmlspecialchars($_ENV[$key]);
+            }
+            return $_ENV[$key];
+        }
+        return null;
     }
 
     /**

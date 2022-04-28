@@ -21,11 +21,13 @@ class Get
      */
     public static function get(string $key): mixed
     {
-        if (is_string($_GET[$key])) {
-            return htmlspecialchars($_GET[$key]);
+        if(key_exists($key, $_GET) ){
+            if (is_string($_GET[$key])) {
+                return htmlspecialchars($_GET[$key]);
+            }
+            return $_GET[$key];
         }
-
-        return $_GET[$key];
+        return null;
     }
 
     /**

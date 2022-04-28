@@ -19,7 +19,13 @@ class Server
      */
     public static function get(string $key): mixed
     {
-        return $_SERVER[$key] ?? null;
+        if(key_exists($key, $_SERVER) ){
+            if (is_string($_SERVER[$key])) {
+                return htmlspecialchars($_SERVER[$key]);
+            }
+            return $_SERVER[$key];
+        }
+        return null;
     }
 
     /**
