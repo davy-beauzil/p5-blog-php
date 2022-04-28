@@ -1,7 +1,7 @@
-#Contexte
+# Contexte
 Ça y est, vous avez sauté le pas ! Le monde du développement web avec PHP est à portée de main et vous avez besoin de visibilité pour pouvoir convaincre vos futurs employeurs/clients en un seul regard. Vous êtes développeur PHP, il est donc temps de montrer vos talents au travers d’un blog à vos couleurs.
 
-#Description du besoin
+# Description du besoin
 Le projet est donc de développer votre blog professionnel. Ce site web se décompose en deux grands groupes de pages :
 
 * les pages utiles à tous les visiteurs ;
@@ -57,7 +57,7 @@ Sur la page permettant de modifier un blog post, l’utilisateur a la possibilit
 
 Dans le footer menu, il doit figurer un lien pour accéder à l’administration du blog.
 
-#Contraintes
+# Contraintes
 Cette fois-ci, nous n’utiliserons pas WordPress. Tout sera développé par vos soins. Les seules lignes de code qui pourront provenir d’ailleurs seront celles du thème Bootstrap, que vous prendrez grand soin de choisir. La présentation, ça compte ! Il est également autorisé d’utiliser une ou plusieurs librairies externes à condition qu’elles soient intégrées grâce à Composer.
 
 Attention, votre blog doit être navigable aisément sur un mobile (téléphone mobile, phablette, tablette…). C’est indispensable ! C’est indispensable :D
@@ -75,7 +75,7 @@ Veillez à bien valider vos tickets pour vous assurer que ceux-ci couvrent bien 
 
 L’écriture de ces tickets vous permettra de vous accorder sur un vocabulaire commun. Il est fortement apprécié qu’ils soient écrits en anglais !
 
-###Nota Bene
+### Nota Bene
 Votre projet devra être suivi via SymfonyInsight, ou Codacy pour la qualité du code. Vous veillerez à obtenir une médaille d'argent au minimum (pour SymfonyInsight). En complément, le respect des PSR est recommandé afin de proposer un code compréhensible et facilement évolutif.
 
 Si vous n’arrivez pas à vous décider sur le thème Bootstrap, en voici un qui pourrait vous convenir http://bit.ly/2emOTxY (source : startbootstrap.com).
@@ -98,7 +98,7 @@ Afin de fluidifier votre avancement voici une proposition de manière de travail
 
 Prenez le temps de valider chaque étape avec votre mentor afin de vous assurer que vous avancez dans la bonne direction.
 
-#Livrables
+# Livrables
 1. Un fichier au format TXT contenant un lien vers un repository Github contenant l’ensemble du projet :
    * Tout le code nécessaire (fichiers PHP/HTML/JS/CSS) ;
    * Un fichier README à la racine du dossier et contenant les instructions pour installer le projet ;
@@ -109,7 +109,7 @@ Prenez le temps de valider chaque étape avec votre mentor afin de vous assurer 
    * Les issues sur le repository GitHub que vous aurez créé
 2. Un fichier au format TXT contenant un lien vers la dernière analyse SymfonyInsight ou Codacy (ou vers le projet public sur la plateforme).
 
-#Soutenance
+# Soutenance
 La soutenance, d’une durée maximum de 30 minutes, se déroulera en 3 étapes :
 
 * Présentation des livrables (20 minutes)
