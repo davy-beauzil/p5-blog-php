@@ -15,10 +15,10 @@
     * <a href="../Diagrammes/SequenceDiagram/Administration/Comment/invalid-comment.png">invalider un commentaire</a>
 
   * ### Contact
-    * <a href="../Diagrammes/SequenceDiagram/Administration/Comment/delete-contact.png">Supprimer une demande de contact</a>
-    * <a href="../Diagrammes/SequenceDiagram/Administration/Comment/read-contacts.png">Lire les demandes de contact</a>
+    * <a href="../Diagrammes/SequenceDiagram/Administration/Contact/delete-contact.png">Supprimer une demande de contact</a>
+    * <a href="../Diagrammes/SequenceDiagram/Administration/Contact/read-contacts.png">Lire les demandes de contact</a>
 
-  * ### Contact
+  * ### Utilisateur
     * <a href="../Diagrammes/SequenceDiagram/Administration/User/delete-user.png">Supprimer un utilisateur</a>
     * <a href="../Diagrammes/SequenceDiagram/Administration/User/update-user.png">Modifier un utilisateur</a>
 
