@@ -93,13 +93,10 @@ class MyAccountController extends AbstractController
         try {
             $updatePassword = $this->checkUpdatePassword($parameters);
             $this->userRepository->changePassword($updatePassword);
-            $this->redirectToRoute('myAccount');
+            $this->redirectToRoute('myAccount', ['success' => 'Votre mot de passe a bien été modifié']);
         } catch (UpdatePasswordException $e) {
-            $this->render('user/myAccount', [
-                'messages' => [[
-                    'type' => 'error',
-                    'text' => $e->getMessage(),
-                ]],
+            $this->redirectToRoute('myAccount', [
+                'error' => $e->getMessage(),
                 'csrf_identity' => CsrfServiceProvider::generate(self::CSRF_IDENTITY_ID),
                 'csrf_password' => CsrfServiceProvider::generate(self::CSRF_PASSWORD_ID),
             ]);
