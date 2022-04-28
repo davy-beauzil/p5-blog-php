@@ -24,7 +24,13 @@ class Session
     {
         self::start();
 
-        return $_SESSION[$key] ?? null;
+        if(key_exists($key, $_SESSION) ){
+            if (is_string($_SESSION[$key])) {
+                return htmlspecialchars($_SESSION[$key]);
+            }
+            return $_SESSION[$key];
+        }
+        return null;
     }
 
     /**
