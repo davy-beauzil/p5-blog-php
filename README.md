@@ -4,7 +4,7 @@ Ce projet a été réalisé dans le cadre de ma formation de développeur
 d'applications web PHP / Symfony chez OpenClassrooms.
 
 * [Contexte du projet](docs/context.md)
-* [Diagrammes que j'ai réalisé](docs/context.md)
+* [Diagrammes que j'ai réalisé](docs/diagrams.md)
 
 ## Installation
 

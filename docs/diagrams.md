@@ -5,7 +5,7 @@
 <img alt="Modèle de données" src="../Diagrammes/DataModel/data-model.png">
 
 # Diagrammes de séquences
-* ##Administration
+* ## Administration
   * ### Articles
     * <a href="../Diagrammes/SequenceDiagram/Administration/Article/create-article.png">création d'un article</a>
     * <a href="../Diagrammes/SequenceDiagram/Administration/Article/delete-article.png">suppression d'un article</a>
