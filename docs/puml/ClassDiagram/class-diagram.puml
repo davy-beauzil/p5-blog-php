@@ -1,0 +1,54 @@
+@startuml
+
+!theme plain
+left to right direction
+
+class article {
+    id : int
+    title : string
+    excerpt : string
+    content : string
+    userId : int
+    createdAt : timestamps
+    updatedAt : timestamps
+}
+
+class comment {
+    id : int
+    content : string
+    isApprouved : bool
+    userId : int
+    articleId : int
+    createdAt : timestamps
+    updatedAt : timestamps
+}
+
+class users {
+   id : int
+   firstName : string
+   lastName : string
+   email : string
+   password : string
+   isValidated : bool
+   isAdmin : bool
+   createdAt : timestamps
+   updatedAt : timestamps
+}
+
+class contact {
+    id : int
+    firstName : string
+    lastName : string
+    email : string
+    message : string
+    userId : int
+    createdAt : datetime
+    updatedAt : datetime
+}
+
+article "*" -- "1" users
+comment "*" -- "1" users
+article "1" -- "*" comment
+users "0..1" -- "*" contact
+
+@enduml

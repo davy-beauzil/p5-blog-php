@@ -32,7 +32,7 @@ try {
         $pdo = $database->getPDO();
 
         $pdo->exec((string) file_get_contents(__DIR__ . '/p5_blog_php.sql'));
-        echo 'Base de données et tables créées';
+        echo "Base de données et tables créées \n";
     }
 } catch (PDOException $e) {
     die('DB ERROR: ' . $e->getMessage());

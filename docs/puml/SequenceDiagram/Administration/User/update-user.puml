@@ -1,0 +1,27 @@
+@startuml
+
+!theme mars
+
+Person as "Administrateur" -> UsersDashboardController : PUT /dashboard/user/{id}/update
+
+alt IsNotAdmin
+    UsersDashboardController -> Twig : redirect('homepage')
+else IsAdmin
+    UsersDashboardController -> Validator : validation des données
+    Validator --> UsersDashboardController : return
+    alt IsNotValid
+        UsersDashboardController -> Twig : redirectToLastPage(['error' => $error])
+        Twig --> Person : affichage du dashboard avec un message d'erreur
+    else IsValid
+        UsersDashboardController -> Database : modification du compte
+        Database --> UsersDashboardController : return
+        alt AccountIsNotUpdated
+            UsersDashboardController -> Twig : redirectToLastPage(['error' => $error])
+            Twig --> Person : affichage du dashboard avec un message d'erreur
+        else AccountIsUpdated
+            UsersDashboardController -> Twig : redirectToLastPage(['success' => $success])
+            Twig --> Person : affichage du dashboard avec un message de succès
+        end
+    end
+end
+@enduml

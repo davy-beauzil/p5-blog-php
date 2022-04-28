@@ -16,6 +16,7 @@ class UpdateArticleValidator extends Validator
         if ($parameters->put['id'] === null ||
             $parameters->put['title'] === null ||
             $parameters->put['content'] === null ||
+            $parameters->put['author'] === null ||
             $parameters->put['excerpt'] === null
         ) {
             throw new UpdateArticleException('Un des champs pour la modification d’un utilisateur est manquant');
@@ -47,6 +48,7 @@ class UpdateArticleValidator extends Validator
         $article->title = $put['title'];
         $article->excerpt = $put['excerpt'];
         $article->content = $put['content'];
+        $article->userId = (int) $put['author'];
 
         return $article;
     }

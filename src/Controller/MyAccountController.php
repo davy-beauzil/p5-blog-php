@@ -60,7 +60,7 @@ class MyAccountController extends AbstractController
      */
     public function updateIdentity(Parameters $parameters): void
     {
-        if ($this->voters->vote(IsCurrentUserVoter::IS_SAME, $parameters->put['id'])) {
+        if (! $this->voters->vote(IsCurrentUserVoter::IS_SAME, $parameters->put['id'])) {
             $this->redirectToRoute('homepage');
         }
 
@@ -87,6 +87,9 @@ class MyAccountController extends AbstractController
      */
     public function updatePassword(Parameters $parameters): void
     {
+        if (! $this->voters->vote(IsCurrentUserVoter::IS_SAME, $parameters->put['id'])) {
+            $this->redirectToRoute('homepage');
+        }
         try {
             $updatePassword = $this->checkUpdatePassword($parameters);
             $this->userRepository->changePassword($updatePassword);

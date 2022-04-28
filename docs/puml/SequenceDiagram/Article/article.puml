@@ -1,0 +1,20 @@
+@startuml
+
+!theme mars
+
+Person as "Visiteur, Utilisateur, Author ou Admin" -> ArticleController : GET /article/{id}
+
+ArticleController -> Database : récupération de l'article avec l'id
+Database --> ArticleController : return
+
+alt ArticleNotExist
+ArticleController -> Twig : redirect('/errors/404.php')
+Twig --> Person : Affichage d'un message d'erreur
+
+else ArticleExist
+ArticleController -> Twig : render('article/article', ['article' => $article])
+Twig --> Person : Affichage de l'article
+end
+
+
+@enduml

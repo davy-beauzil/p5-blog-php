@@ -136,12 +136,13 @@ class ArticleRepository extends AbstractRepository
     public function update(Article $article): void
     {
         $pdo = self::getPDO();
-        $sql = 'UPDATE article SET title = :title, excerpt = :excerpt, content = :content, updatedAt = :updatedAt WHERE id = :id;';
+        $sql = 'UPDATE article SET title = :title, excerpt = :excerpt, content = :content, userId = :userId,  updatedAt = :updatedAt WHERE id = :id;';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'title' => $article->title,
             'excerpt' => $article->excerpt,
             'content' => $article->content,
+            'userId' => $article->userId,
             'updatedAt' => time(),
             'id' => $article->id,
         ]);
@@ -149,5 +150,25 @@ class ArticleRepository extends AbstractRepository
         if ($stmt->rowCount() === 0) {
             throw new CreateArticleException('Une erreur s’est produite lors de la suppression de l’article');
         }
+    }
+
+    /**
+     * @return Article[]
+     */
+    public function getLastArticles(int $limit): array
+    {
+        $pdo = self::getPDO();
+        $sql = 'SELECT * FROM article ORDER BY createdAt DESC LIMIT :limit;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'limit' => $limit,
+        ]);
+        $articles = $stmt->fetchAll(PDO::FETCH_CLASS, Article::class);
+        if (is_array($articles) && count(array_filter($articles, function ($article) {
+            return ! ($article instanceof Article);
+        })) === 0) {
+            return $articles;
+        }
+        throw new PDOException('Une erreur s’est produite lors de la récupération des articles');
     }
 }

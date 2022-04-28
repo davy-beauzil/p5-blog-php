@@ -1,0 +1,23 @@
+@startuml
+
+!theme mars
+
+Person as "Admin" -> ArticleController : GET /dashboard/article/{id}
+
+alt IsNotAuthorize
+ArticleController -> Twig : redirect('homepage')
+Twig --> Person : affichage de la page d'accueil
+else IsAuthorize
+ArticleController -> Database : suppression de l'article
+Database --> ArticleController : return
+
+    alt IsNotDeleted
+    ArticleController -> Twig : redirect('/dashboard/articles', ['error' => $error])
+    Twig --> Person : affichage d'un message d'erreur
+    else IsDeleted
+    ArticleController -> Twig : redirect('/dashboard/articles', ['success' => $success])
+    Twig --> Person : affichage d'un message de succès
+    end
+end
+
+@enduml

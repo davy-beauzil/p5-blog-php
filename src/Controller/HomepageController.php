@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Repository\ArticleRepository;
+use App\Services\CsrfServiceProvider;
+
 class HomepageController extends AbstractController
 {
-    public function index(): void
+    private ArticleRepository $articleRepository;
+
+    public function __construct()
     {
-        $this->render('pages/homepage');
+        $this->articleRepository = new ArticleRepository();
     }
 
-    public function test(): void
+    public function index(): void
     {
-        $this->render('homepage', [
-            'domain' => $_ENV['DOMAIN'],
+        $articles = $this->articleRepository->getLastArticles(3);
+        $this->render('pages/homepage', [
+            'articles' => $articles,
+            'csrf' => CsrfServiceProvider::generate('contact'),
         ]);
     }
 }

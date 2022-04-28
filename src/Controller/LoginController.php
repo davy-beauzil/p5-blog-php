@@ -65,13 +65,8 @@ class LoginController extends AbstractController
                 $this->repository->connectByEmail($login);
                 $this->redirectToRoute('homepage');
             } catch (LoginException $e) {
-                $this->render('login/login', [
-                    'messages' => [
-                        [
-                            'type' => 'error',
-                            'text' => $e->getMessage(),
-                        ],
-                    ],
+                $this->redirectToRoute('login', [
+                    'error' => $e->getMessage(),
                 ]);
             }
         }

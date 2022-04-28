@@ -1,0 +1,31 @@
+@startuml
+
+!theme mars
+
+Person as "Admin" -> ArticleController : GET /dashboard/article/{id}/update
+
+alt IsNotAuthorize
+ArticleController -> Renderer : redirect('homepage')
+Renderer --> Person : affichage de la page d'erreur
+else IsAuthorize
+ArticleController -> Database : récupération de l'article
+Database --> ArticleController : return
+ArticleController -> Renderer : render('dashboard/article/update', ['article' => $article])
+UpdateArticleView --> ArticleController : return
+ArticleController --> Person : affichage du formulaire pré-rempli
+
+Person -> ArticleController : POST /dashboard/article/{id}/update
+    alt IsNotAuthorize
+    ArticleController -> Renderer : redirect('homepage')
+    Renderer --> Person : affichage de la page d'erreur
+    else IsAuthorize
+    ArticleController -> Database : modification de l'article
+    Database --> ArticleController : return
+        alt IsNotUpdated
+        ArticleController -> ArticleController : redirection vers /dashboard/articles avec un message d'erreur
+        else IsUpdated
+        ArticleController -> ArticleController : redirection vers /dashboard/articles avec un message de succès
+        end
+    end
+end
+@enduml

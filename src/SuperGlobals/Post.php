@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\SuperGlobals;
 
 use function array_key_exists;
+use function is_string;
 
 class Post
 {
@@ -35,7 +36,11 @@ class Post
      */
     public static function get(string $key): mixed
     {
-        return htmlspecialchars($_POST[$key]);
+        if (is_string($_POST[$key])) {
+            return htmlspecialchars($_POST[$key]);
+        }
+
+        return $_GET[$key];
     }
 
     /**

@@ -1,0 +1,17 @@
+@startuml
+
+!theme mars
+
+Person as "Admin" -> ContactController : GET /dashboard/contacts
+
+alt IsNotAdmin
+    ContactController -> Twig : redirect('homepage')
+    Twig --> Person : redirection vers la page d'accueil
+else IsAdmin
+    ContactController -> Database : récupération des demandes de contact
+    Database --> ContactController : return
+    ContactController -> Twig : render('dashboard/contact/manager', ['contacts' => $contacts])
+    Twig --> Person : affichage de l'ensemble des demandes de contact
+end
+
+@enduml

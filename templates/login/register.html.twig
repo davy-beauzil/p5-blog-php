@@ -90,7 +90,7 @@
                     </p>
                     <p class="text-center">
                         <small class="text-muted text-center">
-                            Revenir à <a href="#">l'accueil</a>.
+                            Revenir à <a href="/">l'accueil</a>.
                         </small>
                     </p>
                 </form>
@@ -104,58 +104,4 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-{#    <div class="container">#}
-{#        <div class="row">#}
-{#            {% if errors.global %}#}
-{#            <div class="alert alert-danger" role="alert">#}
-{#                {{ errors.global }}#}
-{#            </div>#}
-{#            {% endif %}#}
-{#            <form action="/register" method="post">#}
-{#                <div class="mb-3">#}
-{#                    <label for="firstName" class="form-label">Prénom</label>#}
-{#                    <input type="text" class="form-control {% if errors.firstName %}is-invalid{% endif %}" id="firstName" name="firstName" aria-describedby="firstName_error" required>#}
-{#                    {% if errors.firstName %}#}
-{#                    <div id="firstName_error" class="invalid-feedback">#}
-{#                        {{ errors.firstName }}#}
-{#                    </div>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <div class="mb-3">#}
-{#                    <label for="lastName" class="form-label">Nom</label>#}
-{#                    <input type="text" class="form-control {% if errors.lastName %}is-invalid{% endif %}" id="lastName" name="lastName" aria-describedby="lastName_error" required>#}
-{#                    {% if errors.lastName %}#}
-{#                    <div id="lastName_error" class="invalid-feedback">#}
-{#                        {{ errors.lastName }}#}
-{#                    </div>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <div class="mb-3">#}
-{#                    <label for="email" class="form-label">Adresse email</label>#}
-{#                    <input type="email" class="form-control {% if errors.email %}is-invalid{% endif %}" id="email" name="email" aria-describedby="email_error" required>#}
-{#                    {% if errors.email %}#}
-{#                    <div id="email_error" class="invalid-feedback">#}
-{#                        {{ errors.email }}#}
-{#                    </div>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <div class="mb-3">#}
-{#                    <label for="password" class="form-label">Mot de passe</label>#}
-{#                    <input type="password" class="form-control {% if errors.password %}is-invalid{% endif %}" id="password" name="password" aria-describedby="password_error" required>#}
-{#                    {% if errors.password %}#}
-{#                    <div id="password_error" class="invalid-feedback">#}
-{#                        {{ errors.password }}#}
-{#                    </div>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <input type="submit" class="btn btn-primary" value="S'inscrire">#}
-{#            </form>#}
-{#        </div>#}
-{#    </div>#}
 {% endblock %}

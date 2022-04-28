@@ -1,0 +1,27 @@
+@startuml
+
+!theme mars
+
+Person as "Utilisateur qui a écrit le commentaire" -> CommentController : PUT /comment/{id}/update
+
+alt IsNotGoodUser
+CommentController -> Twig : redirect('homepage')
+else IsGoodUser
+CommentController -> Database : récupération des infos du commentaire
+Database --> CommentController : return
+    alt CommentNotExist
+    CommentController -> Twig : redirect('/article/{id}', ['error' => $error])
+    Twig --> Person : affichage de l'article avec un message d'erreur
+    else CommentExist
+    CommentController -> Database : modification du commentaire
+    Database --> CommentController : return
+        alt CommentIsNotUpdated
+        CommentController -> Twig : render('/article/{id}', ['error' => $error])
+        Twig --> Person : affichage de l'article avec un message d'erreur
+        else CommentIsUpdated
+        CommentController -> Twig : render('/article/{id}', ['success' => $success])
+        Twig --> Person : affichage de l'article avec un message de succès
+        end
+    end
+end
+@enduml

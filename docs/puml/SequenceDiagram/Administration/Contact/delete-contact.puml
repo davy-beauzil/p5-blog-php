@@ -1,0 +1,22 @@
+@startuml
+
+!theme mars
+
+Person as "Admin" -> ContactController : GET /contact/{id}/delete
+
+alt IsNotAdmin
+    ContactController -> Twig : redirect('homepage')
+    Twig --> Person : redirection vers la page d'accueil
+else IsAdmin
+    ContactController -> Database : suppression de la demande de contact
+    Database --> ContactController : return
+    alt ContactIsNotDeleted
+        ContactController -> Twig : redirectToLastPage(['error' => $error])
+                Twig --> Person : affichage de l'ensemble des demandes de contact avec un message d'erreur
+    else ContactIsDeleted
+        ContactController -> Twig : redirectToLastPage(['success' => $success])
+        Twig --> Person : affichage de l'ensemble des demandes de contact avec un message de succès
+    end
+end
+
+@enduml

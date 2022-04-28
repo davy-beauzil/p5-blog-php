@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Services\Validator;
 
 use App\Dto\Article\Article;
-use App\Services\AuthServiceProvider;
 use App\Services\Exception\CreateArticleException;
 use function is_string;
 
 class CreateArticleValidator extends Validator
 {
-    public function validate(mixed $title, mixed $excerpt, mixed $content,): Article
+    public function validate(mixed $title, mixed $excerpt, mixed $content, mixed $author): Article
     {
         if (! $this->biggerThan(0, $title) || ! is_string($title)) {
             throw new CreateArticleException('Le titre ne doit pas être vide.');
@@ -22,14 +21,13 @@ class CreateArticleValidator extends Validator
         if (! $this->biggerThan(0, $content) || ! is_string($content)) {
             throw new CreateArticleException('Le contenu ne doit pas être vide.');
         }
-        $user = AuthServiceProvider::getUser();
-        if ($user === null) {
+        if (! ctype_digit($author) || ! is_string($author)) {
             throw new CreateArticleException('Une erreur est survenue pendant la validation des données.');
         }
 
         /** @var string $title */
         /** @var string $excerpt */
         /** @var string $content */
-        return new Article($title, $excerpt, $content, $user->id);
+        return new Article($title, $excerpt, $content, (int) $author);
     }
 }

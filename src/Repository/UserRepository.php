@@ -228,4 +228,61 @@ class UserRepository extends AbstractRepository
             throw new UpdateUserException('L’utilisateur n’a pas pu être modifié pour une raison inconnue');
         }
     }
+
+    public function createAdmin(): void
+    {
+        $pdo = self::getPDO();
+        $sql = 'INSERT INTO users (firstName, lastName, email, password, isValidated, isAdmin, createdAt, updatedAt) VALUES (:firstName, :lastName, :email, :password, :isValidated, :isAdmin, :createdAt, :updatedAt);';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'firstName' => 'admin',
+            'lastName' => 'admin',
+            'email' => 'admin@test.com',
+            'password' => password_hash('admin', PASSWORD_DEFAULT),
+            'isValidated' => '1',
+            'isAdmin' => '1',
+            'createdAt' => time(),
+            'updatedAt' => time(),
+        ]);
+
+        if ($stmt->rowCount() < 1) {
+            throw new UpdateUserException('Le compte administrateur n’a pas pu être créé');
+        }
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getAll(): array
+    {
+        $pdo = self::getPDO();
+        $sql = 'SELECT * FROM users;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $users = $stmt->fetchAll(PDO::FETCH_CLASS, User::class);
+        if (is_array($users) && count(array_filter($users, function ($user) {
+            return ! ($user instanceof User);
+        })) === 0) {
+            return $users;
+        }
+        throw new PDOException('Une erreur s’est produite lors de la récupération des utilisateurs');
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findAllAdmin(): array
+    {
+        $pdo = self::getPDO();
+        $sql = 'SELECT * FROM users WHERE isAdmin = 1;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $users = $stmt->fetchAll(PDO::FETCH_CLASS, User::class);
+        if (is_array($users) && count(array_filter($users, function ($user) {
+            return ! ($user instanceof User);
+        })) === 0) {
+            return $users;
+        }
+        throw new PDOException('Une erreur s’est produite lors de la récupération des utilisateurs');
+    }
 }

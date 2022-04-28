@@ -10,6 +10,7 @@ use App\Services\AuthServiceProvider;
 use App\Services\Exception\CommentException;
 use App\Services\Voters\IsAdminVoter;
 use App\Services\Voters\IsCurrentUserVoter;
+use App\Services\Voters\IsLoggedInVoter;
 use App\Services\Voters\Voters;
 use function is_string;
 use function mb_strlen;
@@ -60,11 +61,18 @@ class CommentController extends AbstractController
 
     public function add(Parameters $parameters): void
     {
+        if (! $this->voters->vote(IsLoggedInVoter::IS_LOGGED_IN)) {
+            $this->redirectToRoute('login');
+        }
+
         $comment = $parameters->post['comment'];
         $articleId = $parameters->get['article_id'];
         try {
             if (! is_string($comment) || mb_strlen($comment) === 0 || $articleId === null || ! is_string($articleId)) {
                 throw new CommentException('Une erreur s’est produite lors de l’enregistrement du commentaire');
+            }
+            if (mb_strlen($comment) > 1000) {
+                throw new CommentException('Votre commentaire ne peut pas faire plus de 1000 caractères');
             }
             $user = AuthServiceProvider::getUser();
             if ($user === null) {
@@ -84,6 +92,10 @@ class CommentController extends AbstractController
 
     public function valid(Parameters $parameters): void
     {
+        if (! $this->voters->vote(IsAdminVoter::IS_ADMIN)) {
+            $this->redirectToRoute('homepage');
+        }
+
         $commentId = $parameters->get['comment_id'];
         try {
             if ($commentId === null) {
