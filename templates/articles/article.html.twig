@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p>Écrit le {{ article.createdAt|date('d/m/Y') }} {% if article.createdAt != article.updatedAt %}<br> modifié le {{ article.updatedAt|date('d/m/Y') }}{% endif %}</p>
+                    <p>Écrit le {{ article.createdAt|date('d/m/Y') }} {% if article.createdAt != article.updatedAt %}<br> modifié le {{ article.updatedAt|date('d/m/Y') }}{% endif %} par {{ article.userFirstName }} {{ article.userLastName }}</p>
                     <div>
                         {{ article.content }}
                     </div>

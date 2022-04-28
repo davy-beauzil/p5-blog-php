@@ -40,42 +40,6 @@
                             </ul>
                         </nav>
                     </div>
-{#                    <table class="table">#}
-{#                        <thead>#}
-{#                        <tr>#}
-{#                            <th scope="col">Prénom</th>#}
-{#                            <th scope="col">Nom</th>#}
-{#                            <th scope="col">Email</th>#}
-{#                            <th scope="col">Message</th>#}
-{#                            <th scope="col">Envoyé le</th>#}
-{#                            <th scope="col">Actions</th>#}
-{#                        </tr>#}
-{#                        </thead>#}
-{#                        <tbody>#}
-{#                        {% for contact in contacts %}#}
-{#                            <tr>#}
-{#                                {% if contact.userId == null %}#}
-{#                                    <td>{{ contact.firstName }}</td>#}
-{#                                    <td>{{ contact.lastName }}</td>#}
-{#                                    <td><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></td>#}
-{#                                {% else %}#}
-{#                                    <td>{{ contact.getAuthor.firstName }}</td>#}
-{#                                    <td>{{ contact.getAuthor.lastName }}</td>#}
-{#                                    <td><a href="mailto:{{ contact.getAuthor.email }}">{{ contact.getAuthor.email }}</a></td>#}
-{#                                {% endif %}#}
-{#                                <td>{{ contact.message }}</td>#}
-{#                                <td>{{ contact.createdAt|date('d/m/Y H:i') }}</td>#}
-{#                                <td>#}
-{#                                    {% if comment.isApprouved == true %}#}
-{#                                        <a href="/comment/{{ comment.id }}/invalid" class="btn btn-danger">Désapprouver</a>#}
-{#                                    {% else %}#}
-{#                                        <a href="/comment/{{ comment.id }}/valid" class="btn btn-success">Approuver</a>#}
-{#                                    {% endif %}#}
-{#                                </td>#}
-{#                            </tr>#}
-{#                        {% endfor %}#}
-{#                        </tbody>#}
-{#                    </table>#}
 
                     <div class="accordion" id="accordionPanelsStayOpenExample">
                         {% for contact in contacts %}

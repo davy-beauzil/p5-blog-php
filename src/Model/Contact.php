@@ -12,15 +12,15 @@ class Contact
 {
     public int $id;
 
-    public ?string $firstName;
+    public ?string $firstName = null;
 
-    public ?string $lastName;
+    public ?string $lastName = null;
 
-    public ?string $email;
+    public ?string $email = null;
 
     public string $message;
 
-    public ?int $userId;
+    public ?int $userId = null;
 
     public int $createdAt;
 

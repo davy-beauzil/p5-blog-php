@@ -1,0 +1,14 @@
+@startuml
+
+!theme mars
+
+Person as "Utilisateur connecté" -> LogoutController : GET /logout
+alt IsNotLogin
+LogoutController -> Twig : redirect('homepage')
+Twig --> Person : affichage de la page d'accueil
+else IsLogin
+LogoutController -> Session : suppression de l'utilisateur en session
+LogoutController -> Twig : redirect('homepage')
+Twig --> Person : affichage de la page d'accueil
+end
+@enduml

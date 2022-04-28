@@ -6,6 +6,7 @@ namespace App\Services\Validator;
 
 use App\Dto\Login;
 use App\Services\Exception\LoginException;
+use function is_string;
 
 class LoginValidator extends Validator
 {
@@ -14,7 +15,7 @@ class LoginValidator extends Validator
         if (! self::isEmail($email)) {
             throw new LoginException('L’adresse mail est invalide');
         }
-        if (self::onlyAlphabet($password)) {
+        if (! is_string($password)) {
             throw new LoginException('Le mot de passe doit être une chaine de caractères');
         }
         /** @var string $email */

@@ -1,0 +1,20 @@
+@startuml
+
+!theme mars
+
+Person as "Administrateur" -> UsersDashboardController : PUT /dashboard/user/{id}/delete
+
+alt IsNotAdmin
+    UsersDashboardController -> Twig : redirect('homepage')
+else IsAdmin
+    UsersDashboardController -> Database : suppression de l'utilisateur
+    Database --> UsersDashboardController : return
+    alt UserIsNotDeleted
+        UsersDashboardController -> Twig : redirectToLastPage(['error' => $error])
+        Twig --> Person : affichage du dashboard avec un message d'erreur
+    else UserIsDeleted
+        UsersDashboardController -> Twig : redirectToLastPage(['success' => $success])
+        Twig --> Person : affichage du dashboard avec un message de succès
+    end
+end
+@enduml

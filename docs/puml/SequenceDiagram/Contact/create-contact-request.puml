@@ -1,0 +1,29 @@
+@startuml
+
+!theme mars
+
+Person as "Tout le monde" -> ContactController : GET /contact
+
+
+ContactController -> Twig : render('contact/index.php')
+Twig --> Person : affichage de la page de contact
+
+Person -> ContactController : POST /contact
+ContactController -> Validator : validation des données
+Validator --> ContactController : return
+
+alt DataIsNotValid
+    ContactController -> Twig : redirectToLastPage(['error' => $error])
+    Twig --> Person : affichage de la page de contact avec une erreur
+else DataIsValid
+    ContactController -> Database : enregistrement
+    Database --> ContactController : return
+    alt DataIsNotSaved
+    ContactController -> Twig : redirectToLastPage(['error' => $error])
+    Twig --> Person : affichage de la page de contact avec un message d'erreur
+    else DataIsSaved
+    ContactController -> Twig : redirectToLastPage(['success' => $success])
+    Twig --> Person : affichage de la page de contact avec un message de succès
+    end
+end
+@enduml

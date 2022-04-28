@@ -1,0 +1,30 @@
+@startuml
+
+!theme plain
+left to right direction
+
+:Utilisateur:
+
+package article {
+Utilisateur ---> (Consulter les articles)
+Utilisateur ---> (Consulter un article)
+}
+
+package commentaires {
+(Commenter un article : soumis à validation) <--- Utilisateur
+(Modifier ses commentaires) <--- Utilisateur
+(Supprimer ses commentaires) <--- Utilisateur
+}
+
+package compte {
+Utilisateur ---> (Modifier son mot de passe)
+Utilisateur ---> (Modifier ses informations personnelles)
+Utilisateur ---> (Se déconnecter)
+}
+
+package contact {
+(faire une demande de contact) <--- Utilisateur
+}
+
+
+@enduml

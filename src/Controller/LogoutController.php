@@ -24,7 +24,7 @@ class LogoutController extends AbstractController
     {
         if ($this->voters->vote(IsLoggedInVoter::IS_LOGGED_IN)) {
             AuthServiceProvider::logout();
-            $this->redirectToRoute('homepage');
         }
+        $this->redirectToRoute('homepage');
     }
 }

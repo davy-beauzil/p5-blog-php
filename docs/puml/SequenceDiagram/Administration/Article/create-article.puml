@@ -1,0 +1,40 @@
+@startuml
+
+!theme mars
+
+Person as "Admin" -> ArticleController : GET /dashboard/article/create
+
+alt IsNotAuthorize
+ArticleController -> Twig : redirect('homepage')
+Twig --> Person : Affichage de la page d'accueil
+else IsAuthorize
+ArticleController -> Twig : render('/dashboard/articles/create')
+Twig --> Person : affichage page de création d'un article
+
+Person -> ArticleController : POST /dashboard/article/create
+    alt IsNotAuthorize
+    ArticleController -> Twig : redirect('homepage')
+    Twig --> Person : Affichage de la page d'accueil
+    else IsAuthorize
+    ArticleController -> Validator : validation des données
+    Validator --> ArticleController : return
+
+        alt IsNotValid
+        ArticleController -> Twig : render('/dashboard/article/create', ['error' => error])
+        Twig --> Person : Affichage d'un message d'erreur
+        else IsValid
+        ArticleController -> Database : enregistrement
+        Database --> ArticleController : return
+
+            alt IsNotSaved
+            ArticleController -> Twig : render('/dashboard/article/create', ['error' => error])
+            Twig --> Person : Affichage d'un message d'erreur
+            else IsSaved
+            ArticleController -> Twig : render('/article/{id}', ['article' => $article])
+            Twig --> Person : Affichage de l'article avec un message de succès
+            end
+        end
+    end
+end
+
+@enduml

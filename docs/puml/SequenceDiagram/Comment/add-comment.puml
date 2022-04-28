@@ -1,0 +1,26 @@
+@startuml
+
+!theme mars
+
+Person as "Utilisateur ou Admin" -> CommentController : POST /article/{id}/comment/new
+
+alt IsNotLogin
+CommentController -> Twig : redirect('/login')
+else IsLogin
+CommentController -> Validator : validation des données
+    alt DataNotValid
+    CommentController -> Twig : render('/article/{id}', ['error' => $error])
+    Twig --> Person : affichage de l'article avec un message d'erreur
+    else DataValid
+    CommentController -> Database : ajout du commentaire
+    Database --> CommentController : return
+        alt CommentIsNotAdd
+        CommentController -> Twig : render('/article/{id}', ['error' => $error])
+        Twig --> Person : affichage de l'article avec un message d'erreur
+        else CommentIsAdd
+        CommentController -> Twig : render('/article/{id}', ['success' => $success])
+        Twig --> Person : affichage de l'article avec un message de succès
+        end
+    end
+end
+@enduml

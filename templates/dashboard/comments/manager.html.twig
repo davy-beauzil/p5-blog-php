@@ -40,38 +40,40 @@
                             </ul>
                         </nav>
                     </div>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Commentaire</th>
-                            <th scope="col">Auteur</th>
-                            <th scope="col">Approuvé</th>
-                            <th scope="col">Créé le</th>
-                            <th scope="col">Modifié le</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for comment in comments %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
                             <tr>
-                                <td>{{ comment.id }}</td>
-                                <td>{{ comment.content }}</td>
-                                <td><a href="/user/{{ comment.getAuthor.id }}">{{ comment.getAuthor.firstName }} {{ comment.getAuthor.lastName }}</a></td>
-                                <td>{% if comment.isApprouved == true %}<span class="badge bg-success">Oui</span>{% else %}<span class="badge bg-danger">Non</span>{% endif %}</td>
-                                <td>{{ comment.createdAt|date('d/m/Y H:i') }}</td>
-                                <td>{{ comment.updatedAt|date('d/m/Y H:i') }}</td>
-                                <td>
-                                    {% if comment.isApprouved == true %}
-                                        <a href="/comment/{{ comment.id }}/invalid" class="btn btn-danger">Désapprouver</a>
-                                    {% else %}
-                                        <a href="/comment/{{ comment.id }}/valid" class="btn btn-success">Approuver</a>
-                                    {% endif %}
-                                </td>
+                                <th scope="col">ID</th>
+                                <th scope="col">Commentaire</th>
+                                <th scope="col">Auteur</th>
+                                <th scope="col">Approuvé</th>
+                                <th scope="col">Créé le</th>
+                                <th scope="col">Modifié le</th>
+                                <th scope="col">Actions</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {% for comment in comments %}
+                                <tr>
+                                    <td>{{ comment.id }}</td>
+                                    <td>{{ comment.content }}</td>
+                                    <td><a href="/user/{{ comment.getAuthor.id }}">{{ comment.getAuthor.firstName }} {{ comment.getAuthor.lastName }}</a></td>
+                                    <td>{% if comment.isApprouved == true %}<span class="badge bg-success">Oui</span>{% else %}<span class="badge bg-danger">Non</span>{% endif %}</td>
+                                    <td>{{ comment.createdAt|date('d/m/Y H:i') }}</td>
+                                    <td>{{ comment.updatedAt|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        {% if comment.isApprouved == true %}
+                                            <a href="/comment/{{ comment.id }}/invalid" class="btn btn-danger">Désapprouver</a>
+                                        {% else %}
+                                            <a href="/comment/{{ comment.id }}/valid" class="btn btn-success">Approuver</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 

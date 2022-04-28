@@ -3,47 +3,46 @@
 Ce projet a été réalisé dans le cadre de ma formation de développeur 
 d'applications web PHP / Symfony chez OpenClassrooms.
 
+* [Contexte du projet](docs/context.md)
+* [Diagrammes que j'ai réalisé](docs/context.md)
+
 ## Installation
 
-## Le projet
+Une fois que vous avez cloné le projet, faite un copier-coller du fichier ``.env`` et nommez le ``.env.local``
 
-### 1. La demande
-Pour faire court, il m'était demandé de réalisé : 
--   un portfolio qui me présente
--   un formulaire de contact
--   un système de blog
--   un système de comptes utilisateur qui peuvent avoir plusieurs rôles :
--   **VISITEUR** (non connecté), il peut :
-  
-    <img alt="Visitor Usecase" src="docs\Images\Usecases\usecase-visitor.png"/>
--   **UTILISATEUR**, il peut
-  
-    <img alt="Visitor Usecase" src="docs\Images\Usecases\usecase-user.png"/>
--   **AUTEUR**, il peut :
-  
-    <img alt="Visitor Usecase" src="docs\Images\Usecases\usecase-author.png"/>
--   **ADMINISTRATEUR**, il peut :
-  
-    <img alt="Visitor Usecase" src="docs\Images\Usecases\usecase-admin.png"/>
+Vous pouvez alors remplir les informations de votre base de données et votre adresse mail (afin de recevoir les emails du formulaire de contact) :
+```text
+ENV=dev
 
-### 2. Les contraintes
-Pour réaliser ce projet, j'ai eu quelques contraintes imposées :
--   Utilisation d'un thème Bootstrap
--   Possibilité d'utiliser des librairies Composer
--   Site responsive
--   Possibilité d'utiliser le moteur de templating Twig
--   Partie administration accessible qu'aux utilisateurs autorisés (admin et auteurs)
--   Protection contre les failles de sécurité (XSS, CSRF, SQL Injection, session hijacking, 
-upload possible de script PHP…)
--   Projet accessible sur Github et commit en anglais
--   Organiser le projet sur Github avec des issues (de préférence en anglais) à compléter au fil 
-du projet et estimer le temps pour chaque issue
--   Projet suivi par SymfonyInsight ou Codacy pour la qualité de code
+DATABASE_NAME=
+DATABASE_USER=
+DATABASE_PASSWORD=
+DATABASE_HOST=
 
-### 3. Livrables demandés
-Un certain nombre de livrables m'a été demandé pour valider ce projet :
--   lien vers le projet Giothub
--   instruction pour installer le projet dans le fichier REAMDE.md
--   schémas UML dans une dossier nommé "diagrammes" à la racine du projet
--   Les issues que j'ai créé
--   Un lien vers la dernière analyse SymfonyInsight / Codacy
+DOMAIN=http://localhost:8000
+
+ADMIN_EMAIL=
+```
+
+Une fois cela fait, ouvrez un terminal et rendez vous dans le dossier du projet :
+```bash
+cd /racine/vers/le/projet
+```
+
+Exécutez cette commande pour créer et remplir votre base de données :
+```bash
+php src/Database/createDatabase.php
+```
+Vous pouvez maintenant voir une nouvelle base de données (``p5_blog_php``) avec des données à l'intérieur.
+
+Pour lancer le serveur, exécutez cette commande :
+```bash
+php -S localhost:8000 -t /public
+```
+Ouvrez votre navigateur, et accédez au site avec cette url : [http://localhost:8000](http://localhost:8000)
+
+###<span style="color: indianred">Par défaut, un compte administrateur est créé pour que vous puissiez avoir accès à l'ensemble du projet.</span>
+
+adresse email : ``admin@test.com``
+
+mot de passe : ``admin``

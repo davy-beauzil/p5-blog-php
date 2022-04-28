@@ -4,6 +4,76 @@
 
 {% block main_content %}
     <div class="container">
-        <h1>On est sur la homepage</h1>
+        <div class="row py-5 mt-5 d-flex flex-row justify-content-center">
+            <div class="col-12 col-sm-6">
+                <div class="rounded-circle mx-auto" style="height: 300px; width: 300px; background-image: url('./assets/img/me.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center"></div>
+            </div>
+            <div class="col-12 col-sm-6 d-flex align-items-center">
+                <div class="w-100 text-center mb-3">
+                    <h1 class="display-3 fw-bold">Davy Beauzil</h1>
+                    <p class="display-6 fs-5">Développeur web PHP/Symfony</p>
+                    <div>
+                        <a href="./assets/documents/cv.pdf" class="btn btn-success mb-3">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                            Voir mon CV
+                        </a>
+                        <a href="#articles" class="btn btn-primary mb-3">Voir mes articles</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="articles" class="row">
+            <h2 class="display-4">Articles</h2>
+            {% for article in articles %}
+                <div class="px-0 card col-12 col-md-4 mb-3">
+                    <div class="card-header">
+                        <strong class="display-6 fs-6">{{ article.title }}</strong>
+                    </div>
+                    <div class="card-body">
+                        {{ article.excerpt }} <a href="/article/{{ article.id }}">Voir plus</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id="articles" class="row py-5 mt-5">
+            <h2 class="display-4">Suivez-moi sur les réseaux</h2>
+            <div>
+                <a href="https://www.facebook.com/davy.beauzil/" style="background-color:#0062ff; color: #FFF;" class="btn" target="_blank"><i class="bi bi-facebook"></i> Facecook</a>
+                <a href="https://twitter.com/DavyBeauzil" style="background-color:#00bbff; color: #FFF;" class="btn" target="_blank"><i class="bi bi-twitter"></i> Twitter</a>
+                <a href="https://www.instagram.com/bdaavy/" style="background-color:#ee2eff; color: #FFF;" class="btn" target="_blank"><i class="bi bi-instagram"></i> Instagram</a>
+                <a href="https://github.com/davy-beauzil" style="background-color:#383838; color: #FFF;" class="btn" target="_blank"><i class="bi bi-github"></i> Github</a>
+            </div>
+        </div>
+
+        <div id="articles" class="row py-5 mt-5">
+            <h2 class="display-4">Contactez-moi</h2>
+            <form action="/contact" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrf }}">
+                {% if not app.user %}
+                    <div class="row d-flex">
+                        <div class="mb-3 col-sm-6 col-12">
+                            <label for="firstName" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="mb-3 col-sm-6 col-12">
+                            <label for="LastName" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adresse email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                {% endif %}
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="3" aria-describedby="messageHelp" maxlength="1000" required></textarea>
+                    <div id="messageHelp" class="form-text">Votre message ne doit pas dépasser 1000 caractères</div>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Envoyer">
+            </form>
+        </div>
     </div>
 {% endblock %}

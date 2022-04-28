@@ -33,6 +33,16 @@
                         </label>
                         <textarea maxlength="255" name="excerpt" id="excerpt" class="form-control" required>{% if article.excerpt %} {{ article.excerpt }} {% endif %}</textarea>
 
+                        <label class="mt-4 form-label" for="author">
+                            Auteur
+                        </label>
+                        <select name="author" id="author">
+                            <option value="">Choisissez un auteur</option>
+                            {% for author in admins %}
+                            <option value="{{ author.id }}" {% if author.id == article.userId %}selected{% endif %}>{{ author.firstName }} {{ author.lastName }}</option>
+                            {% endfor %}
+                        </select>
+
                         {% if csrf %}
                             <input type="hidden" name="_csrf" value="{{ csrf }}">
                         {% endif %}

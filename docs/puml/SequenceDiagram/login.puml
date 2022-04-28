@@ -1,0 +1,35 @@
+@startuml
+
+!theme mars
+
+Visiteur -> LoginController : GET /login
+alt IsLogin
+LoginController -> Twig : redirect('homepage')
+Twig --> Visiteur : redirection vers la page d'accueil
+
+else IsNotLogin
+LoginController -> Twig : render('login')
+Twig --> Visiteur : affichage du formulaire de connexion
+end
+
+Visiteur -> LoginController : POST /login
+alt IsLogin
+    LoginController -> Twig : redirect('homepage')
+    Twig --> Visiteur : redirection vers la page d'accueil
+else IsNotLogin
+    LoginController -> Database : vérifier que l'adresse mail et le mot de passe correspondent
+    Database --> LoginController : return
+
+    alt AccountNotCorresponding
+    LoginController -> Twig : redirectToLastPage(['error' => $error])
+    Twig --> Visiteur : affichage du formulaire de connexion avec une erreur
+    else AccountCorresponding
+    LoginController -> Session : enregistrement de l'utilisateur en session
+    LoginController -> Twig : redirect('homepage')
+    Twig --> Visiteur : redirection vers la page d'accueil
+    end
+end
+
+
+
+@enduml

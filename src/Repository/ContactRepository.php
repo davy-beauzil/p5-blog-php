@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Model\Contact;
-use App\Services\AuthServiceProvider;
 use App\Services\Exception\ContactException;
 use function array_key_exists;
 use function count;
@@ -19,7 +18,7 @@ class ContactRepository extends AbstractRepository
     public function add(Contact $contact): void
     {
         $pdo = self::getPDO();
-        if (! AuthServiceProvider::isAuthenticated()) {
+        if ($contact->userId === null) {
             $sql = 'INSERT INTO contact (firstName, lastName, email, message, createdAt, updatedAt) VALUES (:firstName, :lastName, :email, :message, :createdAt, :updatedAt);';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([

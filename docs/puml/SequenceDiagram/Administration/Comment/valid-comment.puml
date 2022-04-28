@@ -1,0 +1,21 @@
+@startuml
+
+!theme mars
+
+Person as "Admin" -> CommentController : GET /comment/{comment_id}/valid
+
+alt IsNotAdmin
+CommentController -> Twig : redirect('homepage')
+Twig --> Person : affichage de la page d'accueil
+else IsAdmin
+CommentController -> Database : valider le commentaire
+Database --> CommentController : return
+    alt IsNotValid
+    CommentController -> Twig : render('/dashboard/comments', ['error' => $error]})
+    Twig --> Person : affichage de l'ensemble des commentaires avec un message d'erreur
+    else IsValid
+    CommentController -> Twig : render('/dashboard/comments', ['success' => $success]})
+    Twig --> Person : affichage de l'ensemble des commentaires avec un message de succès
+    end
+end
+@enduml

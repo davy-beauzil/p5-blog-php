@@ -1,0 +1,35 @@
+@startuml
+
+!theme plain
+left to right direction
+
+:Admin:
+
+package article {
+Admin ---> (Créer un article)
+Admin ---> (Modifier un article)
+Admin ---> (Supprimer un article)
+Admin ---> (Consulter les articles)
+Admin ---> (Consulter un article)
+}
+
+package commentaires {
+(Commenter un article) <--- Admin
+(Modifier ses commentaires) <--- Admin
+(Supprimer ses commentaire) <--- Admin
+(Valider un commentaire) <--- Admin
+(Invalider un commentaire) <--- Admin
+}
+
+package compte {
+(Modifier son mot de passe) <--- Admin
+(Modifier ses informations personnelles) <--- Admin
+(Se déconnecter) <--- Admin
+}
+
+package contact {
+Admin ---> (faire une demande de contact)
+Admin ---> (lire les demandes de contact)
+}
+
+@enduml

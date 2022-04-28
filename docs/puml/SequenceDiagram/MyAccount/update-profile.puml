@@ -1,0 +1,29 @@
+@startuml
+
+!theme mars
+
+Person as "Utilisateur" -> MyAccountController : PUT /my-account/update
+
+alt IsBadPerson
+    MyAccountController -> Twig : redirect('homepage')
+else IsGoodPerson
+    MyAccountController -> Validator : validation des données
+    Validator --> MyAccountController : return
+    alt IsNotValid
+        MyAccountController -> Twig : redirectToLastPage(['error' => $error])
+        Twig --> Person : affichage du profil avec un message d'erreur
+    else IsValid
+        MyAccountController -> Database : modification du compte
+        Database --> MyAccountController : return
+        alt AccountIsNotUpdated
+            MyAccountController -> Twig : redirectToLastPage(['error' => $error])
+            Twig --> Person : affichage du profil avec un message d'erreur
+        else AccountIsUpdated
+            MyAccountController -> Session : suppression des anciennes informations
+            MyAccountController -> Session : enregistrement des nouvelles informations
+            MyAccountController -> Twig : redirectToLastPage(['success' => $success])
+            Twig --> Person : affichage du profil avec un message de succès
+        end
+    end
+end
+@enduml

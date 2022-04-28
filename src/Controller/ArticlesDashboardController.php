@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Dto\Article\Article;
 use App\Model\Article as ArticleModel;
 use App\Repository\ArticleRepository;
+use App\Repository\UserRepository;
 use App\Router\Parameters;
 use App\Services\CsrfServiceProvider;
 use App\Services\Exception\CreateArticleException;
@@ -24,16 +25,19 @@ class ArticlesDashboardController extends AbstractController
 
     private Voters $voters;
 
-    private ArticleRepository $repository;
+    private ArticleRepository $articleRepository;
 
     private CreateArticleValidator $createArticleValidator;
 
     private UpdateArticleValidator $updateArticleValidator;
 
+    private UserRepository $userRepository;
+
     public function __construct()
     {
         $this->voters = new Voters();
-        $this->repository = new ArticleRepository();
+        $this->articleRepository = new ArticleRepository();
+        $this->userRepository = new UserRepository();
         $this->createArticleValidator = new createArticleValidator();
         $this->updateArticleValidator = new UpdateArticleValidator();
     }
@@ -49,11 +53,11 @@ class ArticlesDashboardController extends AbstractController
             $page = $parameters->get['page'] ?? null;
             $page = ctype_digit($page) ? (int) $page : 1;
             $page = $page <= 0 ? 1 : $page;
-            $nbrArticles = $this->repository->countArticles();
+            $nbrArticles = $this->articleRepository->countArticles();
             $pages = ceil($nbrArticles / self::NBR_USERS_PER_PAGE);
             $page = $page > $pages ? 1 : $page;
             $firstArticle = ($page - 1) * self::NBR_USERS_PER_PAGE;
-            $articles = $this->repository->getPaginatedArticles($firstArticle, self::NBR_USERS_PER_PAGE);
+            $articles = $this->articleRepository->getPaginatedArticles($firstArticle, self::NBR_USERS_PER_PAGE);
 
             $this->render('dashboard/articles/manager', [
                 'articles' => $articles,
@@ -73,8 +77,11 @@ class ArticlesDashboardController extends AbstractController
             $this->redirectToRoute('homepage');
         }
 
+        $admins = $this->userRepository->findAllAdmin();
+
         $this->render('dashboard/articles/create', [
             'csrf' => CsrfServiceProvider::generate('create-article'),
+            'admins' => $admins,
         ]);
     }
 
@@ -86,7 +93,7 @@ class ArticlesDashboardController extends AbstractController
 
         try {
             $createArticle = $this->checkCreate($parameters);
-            $this->repository->create($createArticle);
+            $this->articleRepository->create($createArticle);
             $this->redirectToRoute('adminArticles', [
                 'success' => 'Votre article a bien été créé.',
             ]);
@@ -112,7 +119,7 @@ class ArticlesDashboardController extends AbstractController
             ]);
         } else {
             try {
-                $this->repository->delete($id);
+                $this->articleRepository->delete($id);
                 $this->redirectToRoute('adminArticles', [
                     'success' => 'L’article a bien été supprimé',
                 ]);
@@ -136,10 +143,12 @@ class ArticlesDashboardController extends AbstractController
             ]);
         } else {
             try {
-                $article = $this->repository->getArticle($id);
+                $admins = $this->userRepository->findAllAdmin();
+                $article = $this->articleRepository->getArticle($id);
                 $this->render('dashboard/articles/create', [
                     'article' => $article,
                     'csrf' => CsrfServiceProvider::generate('update-article'),
+                    'admins' => $admins,
                 ]);
             } catch (PDOException) {
                 $this->redirectToRoute('adminArticles', [
@@ -162,7 +171,7 @@ class ArticlesDashboardController extends AbstractController
         }
         try {
             $article = $this->checkUpdate($parameters);
-            $this->repository->update($article);
+            $this->articleRepository->update($article);
             $this->redirectToRoute('adminArticles', [
                 'success' => 'L’article a bien été modifié',
             ]);
@@ -175,7 +184,7 @@ class ArticlesDashboardController extends AbstractController
 
     private function checkCreate(Parameters $parameters): Article
     {
-        if (! $parameters->has(Parameters::POST, 'title', 'excerpt', 'content', '_csrf')) {
+        if (! $parameters->has(Parameters::POST, 'title', 'excerpt', 'content', 'author', '_csrf')) {
             throw new CreateArticleException('Un des champs requis pour la création d’un article est manquant');
         }
         if (! is_string($parameters->post['_csrf'])) {
@@ -185,6 +194,7 @@ class ArticlesDashboardController extends AbstractController
             $parameters->post['title'],
             $parameters->post['excerpt'],
             $parameters->post['content'],
+            $parameters->post['author'],
         );
         $checkCsrf = CsrfServiceProvider::validate('create-article', $parameters->post['_csrf']);
         if ($checkCsrf === false) {
@@ -196,7 +206,7 @@ class ArticlesDashboardController extends AbstractController
 
     private function checkUpdate(Parameters $parameters): ArticleModel
     {
-        if (! $parameters->has(Parameters::PUT, 'title', 'content', 'excerpt', '_csrf')) {
+        if (! $parameters->has(Parameters::PUT, 'title', 'content', 'excerpt', 'author', '_csrf')) {
             throw new UpdateArticleException('Un des champs est manquant pour modifier l’article');
         }
         if (! is_string($parameters->put['_csrf'])) {
