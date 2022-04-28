@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : jeu. 28 avr. 2022 à 11:02
+-- Généré le : jeu. 28 avr. 2022 à 11:09
 -- Version du serveur :  8.0.28-0ubuntu0.20.04.3
 -- Version de PHP : 8.0.18
 
@@ -245,7 +245,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstName`, `lastName`, `email`, `password`, `isValidated`, `isAdmin`, `createdAt`, `updatedAt`) VALUES
-(1, 'admin', 'admin', 'admin@test.com', '$2y$10$cLAuTHzuNgqNy/wqmbL2IuctQS9J66IRdkAqZIGCtg4ZJ./IOVCbu', 1, 1, 1649751525, 1649751525),
+(1, 'admin', 'admin', 'admin@test.com', '$2y$10$cLAuTHzuNgqNy/wqmbL2IuctQS9J66IRdkAqZIGCtg4ZJ./IOVCbu', 1, 1, 1649751525, 1651136860),
 (2, 'Ora', 'Aufderhar', 'bswaniawski@hotmail.com', '$2y$10$GCCzbpshsvZNWG/LLtoU/e2sLXMRg5w78ottAVNk61.euXxcZnFgO', 0, 0, 1649751525, 1649751525),
 (3, 'Friedrich', 'Braun', 'kareem21@hotmail.com', '$2y$10$cISFJM1It0Nd7AzQpd269.252enLxhPPq7C4GPHDCqq/F8VjzOyOC', 0, 0, 1649751526, 1649751526),
 (4, 'Margarette', 'Reichel', 'rempel.sim@yahoo.com', '$2y$10$smqQRLzHf7o./IRl.OAOEOhLjAyA50WROcMxm6oz1d44O5mKp2vdS', 0, 0, 1649751526, 1649751526),
@@ -340,20 +340,20 @@ ALTER TABLE `users`
 -- Contraintes pour la table `article`
 --
 ALTER TABLE `article`
-  ADD CONSTRAINT `article_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `article_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `comment`
 --
 ALTER TABLE `comment`
-  ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`);
+  ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `contact`
 --
 ALTER TABLE `contact`
-  ADD CONSTRAINT `contact_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `contact_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
