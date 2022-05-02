@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\SuperGlobals;
 
+use function array_key_exists;
+use function is_string;
 use const PHP_SESSION_NONE;
 
 class Session
@@ -24,12 +26,14 @@ class Session
     {
         self::start();
 
-        if(key_exists($key, $_SESSION) ){
+        if (array_key_exists($key, $_SESSION)) {
             if (is_string($_SESSION[$key])) {
                 return htmlspecialchars($_SESSION[$key]);
             }
+
             return $_SESSION[$key];
         }
+
         return null;
     }
 

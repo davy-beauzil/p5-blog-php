@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\SuperGlobals;
 
+use function array_key_exists;
+use function is_string;
+
 class Env
 {
     /**
@@ -19,12 +22,14 @@ class Env
      */
     public static function get(string $key): mixed
     {
-        if(key_exists($key, $_ENV) ){
+        if (array_key_exists($key, $_ENV)) {
             if (is_string($_ENV[$key])) {
                 return htmlspecialchars($_ENV[$key]);
             }
+
             return $_ENV[$key];
         }
+
         return null;
     }
 
