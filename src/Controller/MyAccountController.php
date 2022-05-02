@@ -93,7 +93,9 @@ class MyAccountController extends AbstractController
         try {
             $updatePassword = $this->checkUpdatePassword($parameters);
             $this->userRepository->changePassword($updatePassword);
-            $this->redirectToRoute('myAccount', ['success' => 'Votre mot de passe a bien été modifié']);
+            $this->redirectToRoute('myAccount', [
+                'success' => 'Votre mot de passe a bien été modifié',
+            ]);
         } catch (UpdatePasswordException $e) {
             $this->redirectToRoute('myAccount', [
                 'error' => $e->getMessage(),

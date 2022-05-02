@@ -1,0 +1,21 @@
+@startmindmap
+
+!theme mars
+* Accueil
+** CV
+** Articles
+*** Article
+** Contact
+** Connexion
+** Inscription
+** Mon profil
+** Administration
+*** Gestion utilisateurs
+**** Modification utilisateurs
+**** Profil utilisateur
+*** Gestion articles
+**** Création article
+**** Modification article
+*** Gestion commentaires
+*** Gestion contacts
+@endmindmap

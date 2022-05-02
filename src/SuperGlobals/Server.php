@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\SuperGlobals;
 
+use function array_key_exists;
+use function is_string;
+
 class Server
 {
     /**
@@ -19,12 +22,14 @@ class Server
      */
     public static function get(string $key): mixed
     {
-        if(key_exists($key, $_SERVER) ){
+        if (array_key_exists($key, $_SERVER)) {
             if (is_string($_SERVER[$key])) {
                 return htmlspecialchars($_SERVER[$key]);
             }
+
             return $_SERVER[$key];
         }
+
         return null;
     }
 

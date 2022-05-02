@@ -22,6 +22,7 @@ use function count;
 use function is_array;
 use function is_int;
 use function is_string;
+use const PASSWORD_BCRYPT;
 use const PASSWORD_DEFAULT;
 use PDO;
 use PDOException;
@@ -41,7 +42,7 @@ class UserRepository extends AbstractRepository
             'firstName' => $register->firstName,
             'lastName' => $register->lastName,
             'email' => $register->email,
-            'password' => password_hash($register->password, PASSWORD_DEFAULT),
+            'password' => password_hash($register->password, PASSWORD_BCRYPT),
             'isValidated' => 0,
             'isAdmin' => 0,
             'createdAt' => time(),
